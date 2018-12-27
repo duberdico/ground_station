@@ -1,24 +1,43 @@
 #!/usr/bin/python3
-import pypredict
+import skyfield.api as sf
+import os
+import pandas as pd
+import json
 
 
-def drawSquare(t, sz):
-    """Make turtle t draw a square of with side sz."""
 
-    for i in range(4):
-        t.forward(sz)
-        t.left(90)
+def read_config(config_json):
+    if os.path.isfile(config_json):
+       with open(config_json, 'r') as f:
+           config_data = json.load(f)
+    return(config_data)
 
+def read_TLE(TLE_dir):
+    if os.path.isdir(TLE_dir):
+        satellites = {}
+        files = os.listdir(TLE_dir)
+        for file in files:
+           if file.endswith(".txt"):
+              satellites.update(sf.load.tle(os.path.join(TLE_dir,file)))
+    return satellites
 
-def main():                      # Define the main function
-    wn = turtle.Screen()         # Set up the window and its attributes
-    wn.bgcolor("lightgreen")
-
-    alex = turtle.Turtle()       # create alex
-    drawSquare(alex, 50)         # Call the function to draw the square
-
-    wn.exitonclick()
-
+def main():
+    TLE_dir = '/usr/local/etc/TLE'                      # Define the main function
+    config_json = read_config('config.json')
+    if config_json:
+          sf.Topos(config_json['Location']['Latitude'], config_json['Location']['Longitude'])
+          TLEs = read_TLE(TLE_dir)
+          print(TLEs)
+          for satellite in config_json["Satellites"]:
+              if satellite in TLEs.keys():
+                 # predict next satellite passes for today
+                  ts = sf.load.timescale()
+                 t = ts.now()
+                 #cur_sat = sf.EarthSatellite(TLEs[satellite])
+                 print(satellite)
+                 print(TLEs[satellite])
+                 print(type(TLEs[satellite]))
+             
 if __name__ == "__main__":
     main()
 
