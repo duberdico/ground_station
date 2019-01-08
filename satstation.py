@@ -18,6 +18,7 @@ import pathlib
 
 
 def read_TLE(TLE_dir):
+    logger = logging.getLogger(__name__)
     logger.info('reading TLE data from {0} UTC'.format(TLE_dir))
     if os.path.isdir(TLE_dir): 
         satellites = {} 
@@ -29,7 +30,7 @@ def read_TLE(TLE_dir):
 
 
 def record_pass(sdev,pass_df,rec_file,fs):
-    print('recording pass')
+    logger = logging.getLogger(__name__)
     logger.info('recording pass of {0} @ {1}'.format(pass_df.iloc[0]['Satellite'],''))
     sd.default.samplerate = fs
     sd.default.device = sdev['name']
@@ -42,7 +43,6 @@ def record_pass(sdev,pass_df,rec_file,fs):
         wait_until(r['UTC_time'], True)
         logger.info('doppler step at {0}'.format(r['UTC_time']))
     sd.wait()
-    print('saving {0}'.format(rec_file))
     logger.info('recorded {0} samples @ {1} kHz'.format(satrec.shape[0], fs/1e3))
     logger.info('saving samples to {0}'.format(rec_file))
     #fid = wave.open(rec_file, mode='w')
@@ -54,21 +54,23 @@ def record_pass(sdev,pass_df,rec_file,fs):
 
 def next_pass (config_json,verbose = False):
     c = 299792458 # speed of light m/s
+    logger = logging.getLogger(__name__)
     TLEs = read_TLE(config_json['TLE_dir']) 
     station = sky.Topos(config_json['Location']['Latitude'], config_json['Location']['Longitude']) 
     satellites = config_json["Satellites"]
     ts = sky.load.timescale() 
     t = ts.now() 
-    print('now time is {0} UTC'.format(t.utc_datetime()))
     logger.info('now time is {0} UTC'.format(t.utc_datetime()))
     d = ts.utc(t.utc[0], t.utc[1], t.utc[2]+1) - t
     #T = ts.tt_jd(t.tt + np.array(range(0,int(d * 8640))) * (1/8640))
     T = ts.tt_jd(t.tt + np.array(range(0,8640)) * (1/8640))
     last_duration = 0
+
     for satellite in satellites: 
         if satellite['Name'] in TLEs.keys(): 
             if verbose:
                 print('looking for {0} passes'.format(satellite['Name']))
+            logger.info('looking for {0} passes'.format(satellite['Name']))
             geocentric = TLEs[satellite['Name']].at(T)
             subpoint = geocentric.subpoint()
             loc_difference = TLEs[satellite['Name']] - station
@@ -102,10 +104,12 @@ def next_pass (config_json,verbose = False):
                             break
     return cur_df
 
-def wait_until(target_utc, verbose):
+def wait_until(target_utc, verbose=False):
+    logger = logging.getLogger(__name__)
     ts = sky.load.timescale()
     t = ts.now() 
     # wait until defined time
+    logger.info('waiting until {0}'.format(target_utc))
     if verbose:
         print('waiting until {0}'.format(target_utc))
     while target_utc >t.utc_datetime() :
@@ -121,16 +125,16 @@ def main():
 
     verbose = True
 
-    log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    logging.basicConfig(level=logging.INFO, format=log_fmt)
-
+    
+    logger = logging.getLogger(__name__)
+    
     logger.info('running pandas v' + pd.__version__)
-    logger.info('running skyfield v' + sky.__version__)
+    #logger.info('running skyfield v' + sky.__version__)
     logger.info('running sounddevice v' + sd.__version__)
 
 
-    project_dir = pathlib.Path(__file__).resolve().parents[2]
-    logger.info('running in directory ' + project_dir)
+    project_dir = pathlib.Path(__file__).resolve().parents[0]
+    logger.info('running in directory {0}'.format(project_dir))
 
     config_json = read_config('config.json') 
     if 'TLE_dir' in config_json.keys():
@@ -169,6 +173,7 @@ def main():
                 logger.info('found FUNcube Dongle V2.0')
 
     if config_json and dongle_sdev:
+        ts = sky.load.timescale()
         while 1:
             pass_df = next_pass(config_json,verbose=verbose)
             print('next pass is of {0} starting at UTC {1} lasting {2} seconds'.format(pass_df.iloc[0]['Satellite'],pass_df.iloc[0]['UTC_time'], (pass_df.iloc[-1]['UTC_time'] - pass_df.iloc[0]['UTC_time']).seconds))
@@ -187,8 +192,7 @@ def main():
             #plt.show()
 
             # wait until next pass
-            wait_until(pass_df.iloc[0]['UTC_time'], True)
-            print('starting recording at {0}'.format(ts.now().utc_datetime()))
+            wait_until(pass_df.iloc[0]['UTC_time'])
             logger.info('starting recording at {0}'.format(ts.now().utc_datetime()))
 
             # record pass
@@ -197,4 +201,8 @@ def main():
      
 
 if __name__ == '__main__':
+
+    log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    logging.basicConfig(level=logging.INFO, format=log_fmt)
+    
     sys.exit(main())
