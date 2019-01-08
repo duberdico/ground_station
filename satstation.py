@@ -18,6 +18,7 @@ import pathlib
 
 
 def read_TLE(TLE_dir):
+    logger.info('reading TLE data from {0} UTC'.format(TLE_dir))
     if os.path.isdir(TLE_dir): 
         satellites = {} 
         files = os.listdir(TLE_dir) 
@@ -29,25 +30,27 @@ def read_TLE(TLE_dir):
 
 def record_pass(sdev,pass_df,rec_file,fs):
     print('recording pass')
+    logger.info('recording pass of {0} @ {1}'.format(pass_df.iloc[0]['Satellite'],''))
     sd.default.samplerate = fs
     sd.default.device = sdev['name']
     pass_duration = pass_df.iloc[-1]['UTC_time'] - pass_df.iloc[0]['UTC_time']
     duration = pass_duration.seconds
-    print(duration)
+    logger.info('satellite pass duration {0} seconds'.format(duration))
      
     satrec = sd.rec(int(duration * fs), samplerate=fs, channels=2)
     for r in pass_df.iterrows():
         wait_until(r['UTC_time'], True)
-        print('doppler_Step')
+        logger.info('doppler step at {0}'.format(r['UTC_time']))
     sd.wait()
-    print(satrec.shape)
     print('saving {0}'.format(rec_file))
+    logger.info('recorded {0} samples @ {1} kHz'.format(satrec.shape[0], fs/1e3))
+    logger.info('saving samples to {0}'.format(rec_file))
     #fid = wave.open(rec_file, mode='w')
     #fid.setnchannels(2)
     #fid.setsampwidth(2)
     #fid.setframerate(fs)
     #fid.writeframes(satrec)
-    print('done')
+    logger.info('finished saving')
 
 def next_pass (config_json,verbose = False):
     c = 299792458 # speed of light m/s
@@ -57,6 +60,7 @@ def next_pass (config_json,verbose = False):
     ts = sky.load.timescale() 
     t = ts.now() 
     print('now time is {0} UTC'.format(t.utc_datetime()))
+    logger.info('now time is {0} UTC'.format(t.utc_datetime()))
     d = ts.utc(t.utc[0], t.utc[1], t.utc[2]+1) - t
     #T = ts.tt_jd(t.tt + np.array(range(0,int(d * 8640))) * (1/8640))
     T = ts.tt_jd(t.tt + np.array(range(0,8640)) * (1/8640))
@@ -120,17 +124,19 @@ def main():
     log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     logging.basicConfig(level=logging.INFO, format=log_fmt)
 
+    logger.info('running pandas v' + pd.__version__)
+    logger.info('running skyfield v' + sky.__version__)
+    logger.info('running sounddevice v' + sd.__version__)
+
+
     project_dir = pathlib.Path(__file__).resolve().parents[2]
-
-    #log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    #logging.basicConfig(level=logging.INFO, format=log_fmt)
-
-    TLEdir = project_dir
+    logger.info('running in directory ' + project_dir)
 
     config_json = read_config('config.json') 
     if 'TLE_dir' in config_json.keys():
         if os.path.isdir(config_json['TLE_dir']):
             print("couldn't find TLE_dir ({0}). Defaulting to {1} ".format(config_json['TLE_dir'],project_dir))
+            logger.warning("couldn't find TLE_dir ({0}). Defaulting to {1} ".format(config_json['TLE_dir'],project_dir))
             config_json['TLE_dir'] = project_dir
     else:
         config_json['TLE_dir'] = project_dir
@@ -160,12 +166,14 @@ def main():
             dongle_sdev = sdev
             if verbose:
                 print('found FUNcube Dongle V2.0')
+                logger.info('found FUNcube Dongle V2.0')
 
     if config_json and dongle_sdev:
         while 1:
             pass_df = next_pass(config_json,verbose=verbose)
             print('next pass is of {0} starting at UTC {1} lasting {2} seconds'.format(pass_df.iloc[0]['Satellite'],pass_df.iloc[0]['UTC_time'], (pass_df.iloc[-1]['UTC_time'] - pass_df.iloc[0]['UTC_time']).seconds))
-            
+            logger.info('next pass is of {0} starting at UTC {1} lasting {2} seconds'.format(pass_df.iloc[0]['Satellite'],pass_df.iloc[0]['UTC_time'], (pass_df.iloc[-1]['UTC_time'] - pass_df.iloc[0]['UTC_time']).seconds))
+
             #plt.figure()
             #pylab.polar(pass_df['Azimuth_degrees']*np.pi/180, 90-pass_df['Altitude_degrees'],'b-')
             #ax.set_ylim(bottom = 0,top = 90)
@@ -181,6 +189,7 @@ def main():
             # wait until next pass
             wait_until(pass_df.iloc[0]['UTC_time'], True)
             print('starting recording at {0}'.format(ts.now().utc_datetime()))
+            logger.info('starting recording at {0}'.format(ts.now().utc_datetime()))
 
             # record pass
             rec_file = os.path.join(config_json['Recording_dir'], 'rec.wav')
