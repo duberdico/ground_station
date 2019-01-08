@@ -1,1 +1,1 @@
-{"Satellites": [{"Name": "NOAA 18 [B]", "Frequency_kHz": 137000}, {"Name": "NOAA 15 [B]", "Frequency_kHz": 137000}], "Altitude_threshold_degrees": 20, "Location": {"Latitude": 55.7933, "Longitude": -4.8672}, "TLE_dir": "."}
+{"Satellites": [{"Name": "NOAA 18 [B]", "Frequency_kHz": 137000}, {"Name": "NOAA 15 [B]", "Frequency_kHz": 137000}, {"Name": "NOAA 9 [P]", "Frequency_kHz": 136770}], "Recording_dir": "../recs", "Altitude_threshold_degrees": 0, "Location": {"Latitude": 55.7933, "Longitude": -4.8672}, "TLE_dir": "."}
