@@ -5,16 +5,91 @@
 import os
 import sys
 #import argparse
+import struct
 import logging
 import skyfield.api as sky
 import pandas as pd 
 import json 
 import numpy as np
 import hid
-#import soundfile as sf
-#import wave
+import wave
 import sounddevice as sd
 import pathlib
+
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+
+
+
+
+class FCDProPlus(object):
+    # modified from https://github.com/bazuchan/ghpsdr3-fcdproplus-server/blob/master/fcdpp-server.py
+    def __init__(self, dev=None, swapiq=None, lna_gain=True, mixer_gain=True, if_gain=0, init_freq=7000000, ppm_offset=0.0):
+        self.dev = dev
+        if not self.dev:
+            self.dev = self.autodetect_dev()
+            if not self.dev:
+                raise IOError('FCDPro+ device not found')
+        self.swapiq = swapiq
+        self.ppm_offset = ppm_offset
+        self.ver = self.get_fw_ver()
+        self.set_lna_gain(lna_gain)
+        self.set_mixer_gain(mixer_gain)
+        self.set_if_gain(if_gain)
+        self.set_freq(init_freq)
+
+
+    def autodetect_dev(self):
+        dongle_dev = None
+        devs = hid.enumerate()
+        for dev in devs:
+            if 'FUNcube Dongle V2.0' in dev['product_string']:
+                dongle_dev = dev  
+                break
+        return dongle_dev
+
+    def get_fw_ver(self):
+        d = hid.device()
+        d.open_path(self.dev['path'])
+        d.write([0,1])
+        ver = d.read(65)[2:15]
+        d.close()
+        return ver
+
+    def set_lna_gain(self, lna_gain):
+        d = hid.device()
+        d.open_path(self.dev['path'])
+        d.write([0, 110, int(bool(lna_gain))])
+        if d.read(65)[0]!=110:
+            raise IOError ('Cant set lna gain')
+        d.close()
+
+    def set_mixer_gain(self, mixer_gain):
+        d = hid.device()
+        d.open_path(self.dev['path'])
+        d.write([0, 114, int(bool(mixer_gain))])
+        if d.read(65)[0]!=114:
+            raise ('Cant set mixer gain')
+        d.close()
+
+    def set_if_gain(self, if_gain):
+        d = hid.device()
+        d.open_path(self.dev['path'])
+        d.write([0, 117, if_gain])
+        if d.read(65)[0]!=117:
+            raise IOError ('Cant set if gain')
+        d.close()
+
+    def set_freq(self, freq):
+        d = hid.device()
+        d.open_path(self.dev['path'])
+        corrected_freq = freq + int((float(freq)/1000000.0)*float(self.ppm_offset))
+        d.write([0, 101] + list( struct.pack('I', corrected_freq)))
+        if d.read(65)[0]!=101:
+            raise IOError ('Cant set freq')
+        d.close()
+
 
 
 def read_TLE(TLE_dir):
@@ -29,27 +104,33 @@ def read_TLE(TLE_dir):
     return satellites 
 
 
-def record_pass(sdev,pass_df,rec_file,fs):
+def record_pass(sdev,pass_df,rec_file,fs,doppler_switch = True):
     logger = logging.getLogger(__name__)
-    logger.info('recording pass of {0} @ {1}'.format(pass_df.iloc[0]['Satellite'],''))
+    logger.info('recording pass of {0} starting @ {1}'.format(pass_df.iloc[0]['Satellite'],pass_df.iloc[0]['UTC_time']))
     sd.default.samplerate = fs
-    sd.default.device = sdev['name']
     pass_duration = pass_df.iloc[-1]['UTC_time'] - pass_df.iloc[0]['UTC_time']
     duration = pass_duration.seconds
-    logger.info('satellite pass duration {0} seconds'.format(duration))
-     
+    logger.info('satellite pass duration: {0} seconds'.format(duration))
+    logger.info('maximum elevation: {0} degrees'.format(pass_df['Altitude_degrees'].max()))
+    logger.info('f0: {0} kHz'.format(1e-3* pass_df.iloc[0]['f0']))
     satrec = sd.rec(int(duration * fs), samplerate=fs, channels=2)
-    for r in pass_df.iterrows():
-        wait_until(r['UTC_time'], True)
-        logger.info('doppler step at {0}'.format(r['UTC_time']))
+    fcd = FCDProPlus()
+    fcd.set_freq(pass_df.iloc[0]['f0'] * 1e3)
+    for i,r in pass_df.iterrows():
+        wait_until(r['UTC_time'])
+        if doppler_switch:
+            fcd.set_freq(r['UTC_time'],r['freq'] * 1e3)
+            logger.info('doppler step at {0}: {1} Hz'.format(r['UTC_time'],r['freq']))
+
     sd.wait()
     logger.info('recorded {0} samples @ {1} kHz'.format(satrec.shape[0], fs/1e3))
     logger.info('saving samples to {0}'.format(rec_file))
-    #fid = wave.open(rec_file, mode='w')
-    #fid.setnchannels(2)
-    #fid.setsampwidth(2)
-    #fid.setframerate(fs)
-    #fid.writeframes(satrec)
+    fid = wave.open(rec_file, mode='w')
+    fid.setnchannels(2)
+    fid.setsampwidth(2)
+    fid.setframerate(fs)
+    fid.writeframes(satrec)
+    fid.close()
     logger.info('finished saving')
 
 def next_pass (config_json,verbose = False):
@@ -62,15 +143,16 @@ def next_pass (config_json,verbose = False):
     t = ts.now() 
     logger.info('now time is {0} UTC'.format(t.utc_datetime()))
     d = ts.utc(t.utc[0], t.utc[1], t.utc[2]+1) - t
-    #T = ts.tt_jd(t.tt + np.array(range(0,int(d * 8640))) * (1/8640))
     T = ts.tt_jd(t.tt + np.array(range(0,8640)) * (1/8640))
     last_duration = 0
+    last_start_time =  ts.tt_jd(t.tt + 10)
 
     for satellite in satellites: 
         if satellite['Name'] in TLEs.keys(): 
             if verbose:
                 print('looking for {0} passes'.format(satellite['Name']))
             logger.info('looking for {0} passes'.format(satellite['Name']))
+            freq = (satellite['Frequency_kHz'] * 1e3)
             geocentric = TLEs[satellite['Name']].at(T)
             subpoint = geocentric.subpoint()
             loc_difference = TLEs[satellite['Name']] - station
@@ -87,8 +169,9 @@ def next_pass (config_json,verbose = False):
                 if h > 0:
                     if (alt.degrees[si:h] >= config_json["Altitude_threshold_degrees"]).any():
                         cur_duration = T[h] - T[si]
-                        if cur_duration > last_duration:
+                        if last_start_time  - T[si] > 0:
                             last_duration =  cur_duration
+                            last_start_time = T[si]
                             cur_df = pd.DataFrame(data=None)
                             delta_t = np.diff(T[si-1:h]) * 86400 # seconds
                             cur_df['Azimuth_degrees'] = az.degrees[si:h]
@@ -99,7 +182,9 @@ def next_pass (config_json,verbose = False):
                             cur_df['UTC_time'] = T.utc_datetime()[si:h]
                             delta_distance_meter = np.diff(distance.km[si-1:h]) * 1e3
                             range_rate = delta_distance_meter / delta_t
-                            cur_df['doppler_shift'] =  (1-(range_rate / c)) 
+                            cur_df['doppler_shift'] =  (1-(range_rate / c)).astype(np.float)
+                            cur_df['f0'] =  np.round(freq)
+                            cur_df['freq'] =  np.round( freq * cur_df['doppler_shift'])
                             cur_df['Satellite'] = satellite['Name']
                             break
     return cur_df
@@ -123,9 +208,8 @@ def read_config(config_json):
 
 def main():
 
-    verbose = True
+    verbose = False
 
-    
     logger = logging.getLogger(__name__)
     
     logger.info('running pandas v' + pd.__version__)
@@ -162,42 +246,56 @@ def main():
     for dev in devs:
         if 'FUNcube Dongle V2.0' in dev['product_string']:
             dongle_dev = dev
+            break
 
-    sdevs = sd.query_devices(device=None, kind=None)
+
     dongle_sdev = None
-    for sdev in sdevs:
+    for i, sdev in enumerate(sd.query_devices(device=None, kind=None)):
         if 'FUNcube Dongle V2.0' in sdev['name']:
             dongle_sdev = sdev
-            if verbose:
-                print('found FUNcube Dongle V2.0')
-                logger.info('found FUNcube Dongle V2.0')
+            dongle_sdev['dev'] = i
+            logger.info('found FUNcube Dongle V2.0')
+            break
+    if not dongle_sdev:
+        logger.error('Did not find FUNcube Dongle V2.0 !')
 
     if config_json and dongle_sdev:
+        
+        tmp = sd.default.device
+        tmp[0] = dongle_sdev['dev']
+        sd.default.device = tmp
+        
+        fcd = FCDProPlus()
+        fcd.set_if_gain(True)
+        fcd.set_mixer_gain(True)
+        
         ts = sky.load.timescale()
         while 1:
             pass_df = next_pass(config_json,verbose=verbose)
-            print('next pass is of {0} starting at UTC {1} lasting {2} seconds'.format(pass_df.iloc[0]['Satellite'],pass_df.iloc[0]['UTC_time'], (pass_df.iloc[-1]['UTC_time'] - pass_df.iloc[0]['UTC_time']).seconds))
+            sys.stderr.write('next pass is of {0} starting at UTC {1} lasting {2} seconds\n'.format(pass_df.iloc[0]['Satellite'],pass_df.iloc[0]['UTC_time'], (pass_df.iloc[-1]['UTC_time'] - pass_df.iloc[0]['UTC_time']).seconds))
             logger.info('next pass is of {0} starting at UTC {1} lasting {2} seconds'.format(pass_df.iloc[0]['Satellite'],pass_df.iloc[0]['UTC_time'], (pass_df.iloc[-1]['UTC_time'] - pass_df.iloc[0]['UTC_time']).seconds))
-
-            #plt.figure()
-            #pylab.polar(pass_df['Azimuth_degrees']*np.pi/180, 90-pass_df['Altitude_degrees'],'b-')
-            #ax.set_ylim(bottom = 0,top = 90)
-            #ax.set_theta_zero_location("N")
-            #ax.set_theta_direction(-1)
-            #ax.set_yticklabels([])
-            #ax = plt.subplot(121 )
-            #ax.plot_date(pass_df['UTC_time'], 100* pass_df['doppler_shift'] ,'b-')
-            #ax.grid()
-            #plt.title(pass_df.iloc[0]['Satellite'])
-            #plt.show()
+            filename = pass_df.iloc[0]['Satellite'].split('[')[0].replace(' ','_') +  ts.now().utc_datetime().strftime("%Y%m%d_%H%M%S")
+            plt.figure()
+            ax = plt.subplot(122, projection='polar' )
+            plt.plot(pass_df['Azimuth_degrees']*np.pi/180, 90-pass_df['Altitude_degrees'],'b-')
+            ax.set_ylim(bottom = 0,top = 90)
+            ax.set_theta_zero_location("N")
+            ax.set_theta_direction(-1)
+            ax.set_yticklabels([])
+            ax = plt.subplot(121 )
+            ax.plot_date(pass_df['UTC_time'], 100* pass_df['doppler_shift'] ,'b-')
+            ax.grid()
+            plt.title(pass_df.iloc[0]['Satellite'])
+            plt.savefig(os.path.join(config_json['Recording_dir'],filename + '.png'))
 
             # wait until next pass
             wait_until(pass_df.iloc[0]['UTC_time'])
+
             logger.info('starting recording at {0}'.format(ts.now().utc_datetime()))
 
             # record pass
-            rec_file = os.path.join(config_json['Recording_dir'], 'rec.wav')
-            record_pass(dongle_sdev,pass_df,rec_file,96000)
+            rec_file = os.path.join(config_json['Recording_dir'],filename + '.wav')
+            record_pass(dongle_sdev,pass_df,rec_file,192e3)
      
 
 if __name__ == '__main__':
