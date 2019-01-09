@@ -119,7 +119,7 @@ def record_pass(sdev,pass_df,rec_file,fs,doppler_switch = True):
     for i,r in pass_df.iterrows():
         wait_until(r['UTC_time'])
         if doppler_switch:
-            fcd.set_freq(r['UTC_time'],r['freq'] )
+            fcd.set_freq(r['freq'] )
             logger.info('doppler step at {0}: {1} Hz'.format(r['UTC_time'],r['freq']))
 
     sd.wait()
@@ -127,7 +127,7 @@ def record_pass(sdev,pass_df,rec_file,fs,doppler_switch = True):
     logger.info('saving samples to {0}'.format(rec_file))
     fid = wave.open(rec_file, mode='w')
     fid.setnchannels(2)
-    fid.setsampwidth(2)
+    fid.setsampwidth(1)
     fid.setframerate(fs)
     fid.writeframes(satrec)
     fid.close()
@@ -143,7 +143,8 @@ def next_pass (config_json,verbose = False):
     t = ts.now() 
     logger.info('now time is {0} UTC'.format(t.utc_datetime()))
     d = ts.utc(t.utc[0], t.utc[1], t.utc[2]+1) - t
-    T = ts.tt_jd(t.tt + np.array(range(0,8640)) * (1/8640))
+    step_seconds = 5
+    T = ts.tt_jd(t.tt + np.array(range(0,round(86400/step_seconds))).astype(np.float) * (step_seconds/86400) )
     last_duration = 0
     last_start_time =  ts.tt_jd(t.tt + 10)
 
@@ -277,6 +278,17 @@ def main():
             sys.stderr.write('next pass is of {0} starting at UTC {1} lasting {2} seconds\n'.format(pass_df.iloc[0]['Satellite'],pass_df.iloc[0]['UTC_time'], (pass_df.iloc[-1]['UTC_time'] - pass_df.iloc[0]['UTC_time']).seconds))
             logger.info('next pass is of {0} starting at UTC {1} lasting {2} seconds'.format(pass_df.iloc[0]['Satellite'],pass_df.iloc[0]['UTC_time'], (pass_df.iloc[-1]['UTC_time'] - pass_df.iloc[0]['UTC_time']).seconds))
             filename = pass_df.iloc[0]['Satellite'].split('[')[0].replace(' ','_') +  ts.now().utc_datetime().strftime("%Y%m%d_%H%M%S")
+            rec_file = os.path.join(config_json['Recording_dir'],filename + '.wav')
+            fig_file = os.path.join(config_json['Recording_dir'],filename + '.png')
+
+            # wait until next pass
+            wait_until(pass_df.iloc[0]['UTC_time'])
+            logger.info('starting recording at {0}'.format(ts.now().utc_datetime()))
+            # record pass
+           
+            record_pass(dongle_sdev,pass_df,rec_file,192e3, doppler_switch= doppler)
+
+             # plot
             plt.figure()
             ax = plt.subplot(122, projection='polar' )
             plt.plot(pass_df['Azimuth_degrees']*np.pi/180, 90-pass_df['Altitude_degrees'],'b-')
@@ -291,21 +303,13 @@ def main():
             plt.ylabel('Freq [MHz]')
             ax.grid()
             
-            plt.savefig(os.path.join(config_json['Recording_dir'],filename + '.png'))
+            plt.savefig(fig_file)
 
-            # wait until next pass
-            wait_until(pass_df.iloc[0]['UTC_time'])
-
-            logger.info('starting recording at {0}'.format(ts.now().utc_datetime()))
-
-            # record pass
-            rec_file = os.path.join(config_json['Recording_dir'],filename + '.wav')
-            record_pass(dongle_sdev,pass_df,rec_file,192e3, doppler_switch= doppler)
      
 
 if __name__ == '__main__':
 
     log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    logging.basicConfig(level=logging.INFO, format=log_fmt)
+    logging.basicConfig(level=logging.INFO, format=log_fmt,filename = 'satstation.log', filemode='a')
     
     sys.exit(main())
