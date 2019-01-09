@@ -84,7 +84,8 @@ class FCDProPlus(object):
     def set_freq(self, freq):
         d = hid.device()
         d.open_path(self.dev['path'])
-        corrected_freq = freq + int((float(freq)/1000000.0)*float(self.ppm_offset))
+        corrected_freq = int(np.round(freq + (float(freq)/1000000.0)*float(self.ppm_offset)))
+        print(corrected_freq)
         d.write([0, 101] + list( struct.pack('I', corrected_freq)))
         if d.read(65)[0]!=101:
             raise IOError ('Cant set freq')
@@ -115,11 +116,11 @@ def record_pass(sdev,pass_df,rec_file,fs,doppler_switch = True):
     logger.info('f0: {0} kHz'.format(1e-3* pass_df.iloc[0]['f0']))
     satrec = sd.rec(int(duration * fs), samplerate=fs, channels=2)
     fcd = FCDProPlus()
-    fcd.set_freq(pass_df.iloc[0]['f0'] * 1e3)
+    fcd.set_freq(pass_df.iloc[0]['f0'] )
     for i,r in pass_df.iterrows():
         wait_until(r['UTC_time'])
         if doppler_switch:
-            fcd.set_freq(r['UTC_time'],r['freq'] * 1e3)
+            fcd.set_freq(r['UTC_time'],r['freq'] )
             logger.info('doppler step at {0}: {1} Hz'.format(r['UTC_time'],r['freq']))
 
     sd.wait()
@@ -268,6 +269,7 @@ def main():
         fcd = FCDProPlus()
         fcd.set_if_gain(True)
         fcd.set_mixer_gain(True)
+        fcd.set_freq(137 * 1e6)
         
         ts = sky.load.timescale()
         while 1:
