@@ -213,10 +213,11 @@ def main():
     doppler = True
 
     logger = logging.getLogger(__name__)
-    
+    logger.info('++++++++++++++++++++++++++++++++++++++++\n')
     logger.info('running pandas v' + pd.__version__)
     #logger.info('running skyfield v' + sky.__version__)
     logger.info('running sounddevice v' + sd.__version__)
+    logger.info('++++++++++++++++++++++++++++++++++++++++\n')
 
 
     project_dir = pathlib.Path(__file__).resolve().parents[0]
@@ -266,6 +267,7 @@ def main():
         tmp = sd.default.device
         tmp[0] = dongle_sdev['dev']
         sd.default.device = tmp
+        sd.default.device = 1
         
         fcd = FCDProPlus()
         fcd.set_if_gain(True)
