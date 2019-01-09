@@ -85,7 +85,6 @@ class FCDProPlus(object):
         d = hid.device()
         d.open_path(self.dev['path'])
         corrected_freq = int(np.round(freq + (float(freq)/1000000.0)*float(self.ppm_offset)))
-        print(corrected_freq)
         d.write([0, 101] + list( struct.pack('I', corrected_freq)))
         if d.read(65)[0]!=101:
             raise IOError ('Cant set freq')
@@ -210,6 +209,7 @@ def read_config(config_json):
 def main():
 
     verbose = False
+    doppler = True
 
     logger = logging.getLogger(__name__)
     
@@ -284,10 +284,13 @@ def main():
             ax.set_theta_zero_location("N")
             ax.set_theta_direction(-1)
             ax.set_yticklabels([])
-            ax = plt.subplot(121 )
-            ax.plot_date(pass_df['UTC_time'], 100* pass_df['doppler_shift'] ,'b-')
-            ax.grid()
             plt.title(pass_df.iloc[0]['Satellite'])
+            ax = plt.subplot(121 )
+            ax.plot_date(pass_df['UTC_time'], pass_df['freq'] *1e-6,'b-')
+            plt.xticks(rotation='vertical')
+            plt.ylabel('Freq [MHz]')
+            ax.grid()
+            
             plt.savefig(os.path.join(config_json['Recording_dir'],filename + '.png'))
 
             # wait until next pass
@@ -297,7 +300,7 @@ def main():
 
             # record pass
             rec_file = os.path.join(config_json['Recording_dir'],filename + '.wav')
-            record_pass(dongle_sdev,pass_df,rec_file,192e3)
+            record_pass(dongle_sdev,pass_df,rec_file,192e3, doppler_switch= doppler)
      
 
 if __name__ == '__main__':
