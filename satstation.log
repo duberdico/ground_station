@@ -1,48 +1,30 @@
-2019-01-09 13:22:39,573 - __main__ - INFO - running pandas v0.23.4
-2019-01-09 13:22:39,573 - __main__ - INFO - running sounddevice v0.3.12
-2019-01-09 13:22:39,573 - __main__ - INFO - running in directory C:\Users\ricardo.antunes\Source\Repos\sat_station
-2019-01-09 13:22:39,574 - __main__ - WARNING - couldn't find TLE_dir (.). Defaulting to C:\Users\ricardo.antunes\Source\Repos\sat_station 
-2019-01-09 13:22:39,593 - __main__ - INFO - found FUNcube Dongle V2.0
-2019-01-09 13:22:39,643 - __main__ - INFO - reading TLE data from C:\Users\ricardo.antunes\Source\Repos\sat_station UTC
-2019-01-09 13:22:39,653 - __main__ - INFO - now time is 2019-01-09 13:22:39.654000+00:00 UTC
-2019-01-09 13:23:07,821 - __main__ - INFO - running pandas v0.23.4
-2019-01-09 13:23:07,822 - __main__ - INFO - running sounddevice v0.3.12
-2019-01-09 13:23:07,822 - __main__ - INFO - running in directory C:\Users\ricardo.antunes\Source\Repos\sat_station
-2019-01-09 13:23:07,825 - __main__ - WARNING - couldn't find TLE_dir (.). Defaulting to C:\Users\ricardo.antunes\Source\Repos\sat_station 
-2019-01-09 13:23:07,847 - __main__ - INFO - found FUNcube Dongle V2.0
-2019-01-09 13:23:07,898 - __main__ - INFO - reading TLE data from C:\Users\ricardo.antunes\Source\Repos\sat_station UTC
-2019-01-09 13:23:07,908 - __main__ - INFO - now time is 2019-01-09 13:23:07.908000+00:00 UTC
-2019-01-09 13:25:03,825 - __main__ - INFO - running pandas v0.23.4
-2019-01-09 13:25:03,825 - __main__ - INFO - running sounddevice v0.3.12
-2019-01-09 13:25:03,826 - __main__ - INFO - running in directory C:\Users\ricardo.antunes\Source\Repos\sat_station
-2019-01-09 13:25:03,826 - __main__ - WARNING - couldn't find TLE_dir (.). Defaulting to C:\Users\ricardo.antunes\Source\Repos\sat_station 
-2019-01-09 13:25:03,845 - __main__ - INFO - found FUNcube Dongle V2.0
-2019-01-09 13:25:03,894 - __main__ - INFO - reading TLE data from C:\Users\ricardo.antunes\Source\Repos\sat_station UTC
-2019-01-09 13:25:03,905 - __main__ - INFO - now time is 2019-01-09 13:25:03.905000+00:00 UTC
-2019-01-09 13:25:03,965 - __main__ - INFO - looking for NOAA 18 [B] passes
-2019-01-09 13:27:52,546 - __main__ - INFO - running pandas v0.23.4
-2019-01-09 13:27:52,546 - __main__ - INFO - running sounddevice v0.3.12
-2019-01-09 13:27:52,547 - __main__ - INFO - running in directory C:\Users\ricardo.antunes\Source\Repos\sat_station
-2019-01-09 13:27:52,548 - __main__ - WARNING - couldn't find TLE_dir (.). Defaulting to C:\Users\ricardo.antunes\Source\Repos\sat_station 
-2019-01-09 13:27:52,566 - __main__ - INFO - found FUNcube Dongle V2.0
-2019-01-09 13:27:52,617 - __main__ - INFO - reading TLE data from C:\Users\ricardo.antunes\Source\Repos\sat_station UTC
-2019-01-09 13:27:52,627 - __main__ - INFO - now time is 2019-01-09 13:27:52.627000+00:00 UTC
-2019-01-09 13:28:44,135 - __main__ - INFO - running pandas v0.23.4
-2019-01-09 13:28:44,135 - __main__ - INFO - running sounddevice v0.3.12
-2019-01-09 13:28:44,136 - __main__ - INFO - running in directory C:\Users\ricardo.antunes\Source\Repos\sat_station
-2019-01-09 13:28:44,136 - __main__ - WARNING - couldn't find TLE_dir (.). Defaulting to C:\Users\ricardo.antunes\Source\Repos\sat_station 
-2019-01-09 13:28:44,152 - __main__ - INFO - found FUNcube Dongle V2.0
-2019-01-09 13:28:44,203 - __main__ - INFO - reading TLE data from C:\Users\ricardo.antunes\Source\Repos\sat_station UTC
-2019-01-09 13:28:44,215 - __main__ - INFO - now time is 2019-01-09 13:28:44.215000+00:00 UTC
-2019-01-09 13:29:13,314 - __main__ - INFO - running pandas v0.23.4
-2019-01-09 13:29:13,314 - __main__ - INFO - running sounddevice v0.3.12
-2019-01-09 13:29:13,314 - __main__ - INFO - running in directory C:\Users\ricardo.antunes\Source\Repos\sat_station
-2019-01-09 13:29:13,315 - __main__ - WARNING - couldn't find TLE_dir (.). Defaulting to C:\Users\ricardo.antunes\Source\Repos\sat_station 
-2019-01-09 13:29:13,332 - __main__ - INFO - found FUNcube Dongle V2.0
-2019-01-09 13:29:13,380 - __main__ - INFO - reading TLE data from C:\Users\ricardo.antunes\Source\Repos\sat_station UTC
-2019-01-09 13:29:13,391 - __main__ - INFO - now time is 2019-01-09 13:29:13.390000+00:00 UTC
-2019-01-09 13:29:13,393 - __main__ - INFO - looking for NOAA 18 [B] passes
-2019-01-09 13:29:19,086 - __main__ - INFO - looking for NOAA 15 [B] passes
-2019-01-09 13:29:20,366 - __main__ - INFO - looking for NOAA 9 [P] passes
-2019-01-09 13:29:21,806 - __main__ - INFO - next pass is of NOAA 15 [B] starting at UTC 2019-01-09 13:56:28.390000+00:00 lasting 410 seconds
-2019-01-09 13:29:21,814 - __main__ - INFO - waiting until 2019-01-09 13:56:28.390000+00:00
+2019-01-09 22:12:30,141 - __main__ - INFO - ++++++++++++++++++++++++++++++++++++++++
+2019-01-09 22:12:30,141 - __main__ - INFO - running pandas v0.23.4
+2019-01-09 22:12:30,142 - __main__ - INFO - running sounddevice v0.3.12
+2019-01-09 22:12:30,142 - __main__ - INFO - ++++++++++++++++++++++++++++++++++++++++
+2019-01-09 22:12:30,142 - __main__ - INFO - running in directory /usr/local/src/sat_station
+2019-01-09 22:12:30,143 - __main__ - WARNING - couldn't find TLE_dir (.). Defaulting to /usr/local/src/sat_station 
+2019-01-09 22:12:30,157 - __main__ - INFO - found FUNcube Dongle V2.0
+2019-01-09 22:12:30,304 - __main__ - INFO - reading TLE data from /usr/local/src/sat_station
+2019-01-09 22:12:30,370 - __main__ - INFO - now time is 2019-01-09 22:12:30.370000+00:00 UTC
+2019-01-09 22:12:30,380 - __main__ - INFO - looking for NOAA 18 [B] passes
+2019-01-09 22:12:55,507 - __main__ - INFO - looking for NOAA 15 [B] passes
+2019-01-09 22:13:00,848 - __main__ - INFO - looking for NOAA 9 [P] passes
+2019-01-10 21:17:16,229 - __main__ - INFO - ++++++++++++++++++++++++++++++++++++++++
+2019-01-10 21:17:16,230 - __main__ - INFO - running pandas v0.23.4
+2019-01-10 21:17:16,231 - __main__ - INFO - running sounddevice v0.3.12
+2019-01-10 21:17:16,231 - __main__ - INFO - ++++++++++++++++++++++++++++++++++++++++
+2019-01-10 21:17:16,233 - __main__ - INFO - running in directory /usr/local/src/sat_station
+2019-01-10 21:17:16,234 - __main__ - WARNING - couldn't find TLE_dir (.). Defaulting to /usr/local/src/sat_station 
+2019-01-10 21:17:16,262 - __main__ - INFO - found FUNcube Dongle V2.0
+2019-01-10 21:17:17,247 - __main__ - INFO - reading TLE data from /usr/local/src/sat_station UTC
+2019-01-10 21:19:10,179 - __main__ - INFO - ++++++++++++++++++++++++++++++++++++++++
+2019-01-10 21:19:10,179 - __main__ - INFO - running pandas v0.23.4
+2019-01-10 21:19:10,179 - __main__ - INFO - running sounddevice v0.3.12
+2019-01-10 21:19:10,180 - __main__ - INFO - ++++++++++++++++++++++++++++++++++++++++
+2019-01-10 21:19:10,180 - __main__ - INFO - running in directory /usr/local/src/sat_station
+2019-01-10 21:19:10,181 - __main__ - WARNING - couldn't find TLE_dir (.). Defaulting to /usr/local/src/sat_station 
+2019-01-10 21:19:10,195 - __main__ - INFO - found FUNcube Dongle V2.0
+2019-01-10 21:19:10,287 - __main__ - INFO - reading TLE data from /usr/local/src/sat_station UTC
+2019-01-10 21:19:10,355 - __main__ - INFO - now time is 2019-01-10 21:19:10.354000+00:00 UTC
+2019-01-10 21:19:10,373 - __main__ - INFO - looking for NOAA 18 [B] passes

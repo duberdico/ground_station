@@ -45,7 +45,7 @@ class FCDProPlus(object):
         devs = hid.enumerate()
         for dev in devs:
             if 'FUNcube Dongle V2.0' in dev['product_string']:
-                dongle_dev = dev  
+                dongle_dev = dev
                 break
         return dongle_dev
 
@@ -125,7 +125,7 @@ def record_pass(sdev,pass_df,rec_file,fs,doppler_switch = True):
     sd.wait()
     logger.info('recorded {0} samples @ {1} kHz'.format(satrec.shape[0], fs/1e3))
     logger.info('saving samples to {0}'.format(rec_file))
-    wavfile.write('/Users/ricardo.antunes/Source/Repos/sat_station/test2.wav', fs, satrec)
+    wavfile.write(rec_file, fs, satrec)
     logger.info('finished saving')
 
 def next_pass (config_json,verbose = False):
@@ -138,7 +138,7 @@ def next_pass (config_json,verbose = False):
     t = ts.now() 
     logger.info('now time is {0} UTC'.format(t.utc_datetime()))
     d = ts.utc(t.utc[0], t.utc[1], t.utc[2]+1) - t
-    step_seconds = 5
+    step_seconds = 10
     T = ts.tt_jd(t.tt + np.array(range(0,round(86400/step_seconds))).astype(np.float) * (step_seconds/86400) )
     last_duration = 0
     last_start_time =  ts.tt_jd(t.tt + 10)
@@ -160,6 +160,8 @@ def next_pass (config_json,verbose = False):
             k = j[1:] - j[0:-1]
             s = np.argwhere(k == 1).reshape(-1)
             e = np.argwhere(k == -1).reshape(-1)
+            print(s)
+            print(e)
             for si in s:
                 h = e[e>si].reshape(-1).min()
                 if h > 0:
@@ -219,9 +221,9 @@ def main():
         if os.path.isdir(config_json['TLE_dir']):
             print("couldn't find TLE_dir ({0}). Defaulting to {1} ".format(config_json['TLE_dir'],project_dir))
             logger.warning("couldn't find TLE_dir ({0}). Defaulting to {1} ".format(config_json['TLE_dir'],project_dir))
-            config_json['TLE_dir'] = project_dir
+            config_json['TLE_dir'] = str(project_dir)
     else:
-        config_json['TLE_dir'] = project_dir
+        config_json['TLE_dir'] = str(project_dir)
 
 
     if 'log_dir' in config_json.keys():
@@ -265,7 +267,6 @@ def main():
         tmp = sd.default.device
         tmp[0] = dongle_sdev['dev']
         sd.default.device = tmp
-        sd.default.device = 1
         
         fcd = FCDProPlus()
         fcd.set_if_gain(True)
@@ -330,7 +331,7 @@ if __name__ == '__main__':
     
     
     log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    logging.basicConfig(level=logging.INFO, format=log_fmt,filename = 'satstation.log', filemode='a')
+    logging.basicConfig(level=logging.INFO, format=log_fmt, filename = 'log.txt')
     
 
 

@@ -1,0 +1,28 @@
+2019-01-10 21:40:23,722 - __main__ - INFO - ++++++++++++++++++++++++++++++++++++++++
+2019-01-10 21:40:23,722 - __main__ - INFO - running pandas v0.23.4
+2019-01-10 21:40:23,722 - __main__ - INFO - running sounddevice v0.3.12
+2019-01-10 21:40:23,723 - __main__ - INFO - ++++++++++++++++++++++++++++++++++++++++
+2019-01-10 21:40:23,723 - __main__ - INFO - running in directory /usr/local/src/sat_station
+2019-01-10 21:40:23,724 - __main__ - WARNING - couldn't find TLE_dir (.). Defaulting to /usr/local/src/sat_station 
+2019-01-10 21:40:23,738 - __main__ - INFO - found FUNcube Dongle V2.0
+2019-01-10 21:40:23,830 - __main__ - INFO - reading TLE data from /usr/local/src/sat_station UTC
+2019-01-10 21:40:23,895 - __main__ - INFO - now time is 2019-01-10 21:40:23.895000+00:00 UTC
+2019-01-10 21:40:23,904 - __main__ - INFO - looking for NOAA 18 [B] passes
+2019-01-10 21:40:47,204 - __main__ - INFO - looking for NOAA 15 [B] passes
+2019-01-10 21:40:52,142 - __main__ - INFO - looking for NOAA 9 [P] passes
+2019-01-10 21:40:57,116 - __main__ - INFO - next pass is of NOAA 18 [B] starting at UTC 2019-01-10 23:10:03.895000+00:00 lasting 130 seconds
+2019-01-10 21:40:57,168 - __main__ - INFO - waiting until 2019-01-10 23:10:03.895000+00:00
+2019-01-10 21:41:26,852 - __main__ - INFO - ++++++++++++++++++++++++++++++++++++++++
+2019-01-10 21:41:26,853 - __main__ - INFO - running pandas v0.23.4
+2019-01-10 21:41:26,853 - __main__ - INFO - running sounddevice v0.3.12
+2019-01-10 21:41:26,853 - __main__ - INFO - ++++++++++++++++++++++++++++++++++++++++
+2019-01-10 21:41:26,854 - __main__ - INFO - running in directory /usr/local/src/sat_station
+2019-01-10 21:41:26,855 - __main__ - WARNING - couldn't find TLE_dir (.). Defaulting to /usr/local/src/sat_station 
+2019-01-10 21:41:26,870 - __main__ - INFO - found FUNcube Dongle V2.0
+2019-01-10 21:41:27,391 - __main__ - INFO - reading TLE data from /usr/local/src/sat_station UTC
+2019-01-10 21:41:27,458 - __main__ - INFO - now time is 2019-01-10 21:41:27.458000+00:00 UTC
+2019-01-10 21:41:27,467 - __main__ - INFO - looking for NOAA 18 [B] passes
+2019-01-10 21:41:54,005 - __main__ - INFO - looking for NOAA 15 [B] passes
+2019-01-10 21:42:00,293 - __main__ - INFO - looking for NOAA 9 [P] passes
+2019-01-10 21:42:05,370 - __main__ - INFO - next pass is of NOAA 18 [B] starting at UTC 2019-01-10 23:10:07.458000+00:00 lasting 120 seconds
+2019-01-10 21:42:05,422 - __main__ - INFO - waiting until 2019-01-10 23:10:07.458000+00:00
