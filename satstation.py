@@ -4,7 +4,7 @@
 """
 import os
 import sys
-#import argparse
+import argparse
 import struct
 import logging
 import skyfield.api as sky
@@ -19,7 +19,7 @@ import pathlib
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-
+from scipy.io import wavfile
 
 
 
@@ -125,12 +125,7 @@ def record_pass(sdev,pass_df,rec_file,fs,doppler_switch = True):
     sd.wait()
     logger.info('recorded {0} samples @ {1} kHz'.format(satrec.shape[0], fs/1e3))
     logger.info('saving samples to {0}'.format(rec_file))
-    fid = wave.open(rec_file, mode='w')
-    fid.setnchannels(2)
-    fid.setsampwidth(1)
-    fid.setframerate(fs)
-    fid.writeframes(satrec)
-    fid.close()
+    wavfile.write('/Users/ricardo.antunes/Source/Repos/sat_station/test2.wav', fs, satrec)
     logger.info('finished saving')
 
 def next_pass (config_json,verbose = False):
@@ -208,16 +203,12 @@ def read_config(config_json):
     return(config_data) 
 
 def main():
-
-    verbose = False
-    doppler = True
-
     logger = logging.getLogger(__name__)
-    logger.info('++++++++++++++++++++++++++++++++++++++++\n')
+    logger.info('++++++++++++++++++++++++++++++++++++++++')
     logger.info('running pandas v' + pd.__version__)
     #logger.info('running skyfield v' + sky.__version__)
     logger.info('running sounddevice v' + sd.__version__)
-    logger.info('++++++++++++++++++++++++++++++++++++++++\n')
+    logger.info('++++++++++++++++++++++++++++++++++++++++')
 
 
     project_dir = pathlib.Path(__file__).resolve().parents[0]
@@ -232,13 +223,20 @@ def main():
     else:
         config_json['TLE_dir'] = project_dir
 
-    #check if recording directory exists and create if necessary:
-    #if not os.path.isdir(config_json['Recording_dir']):
-    #    os.mkdir(config_json['Recording_dir'])
+
+    if 'log_dir' in config_json.keys():
+        if os.path.isdir(config_json['log_dir']):
+            print("couldn't find log_dir ({0}). Defaulting to {1} ".format(config_json['TLE_dir'],'./log'))
+            logger.warning("couldn't find TLE_dir ({0}). Defaulting to {1} ".format(config_json['TLE_dir'],'./log'))
+            config_json['log_dir'] = './log'
+    else:
+        config_json['log_dir'] = './log'
+
 
     #check if recording directory exists and create if necessary:
     if not os.path.isdir('./log'):
         os.mkdir('./log')
+
     if not os.path.isdir('./report'):
         os.mkdir('./report')
     
@@ -311,7 +309,29 @@ def main():
 
 if __name__ == '__main__':
 
+    
+    verbose = False
+    doppler = True
+
+    parser = argparse.ArgumentParser(description='Process some integers.')
+    parser.add_argument('--log_dir', metavar='N', type=str, help='logging directory')
+    parser.add_argument('--rec_dir', metavar='N', type=str, help='recording directory')
+    parser.add_argument("-v","--verbose", help="increase output verbosity",action="store_true")
+    parser.add_argument("-d","--doppler", help="correct for doppler shift")
+    
+    args = parser.parse_args()
+
+
+    print(args)
+
+    if args.verbose:
+        verbose = True
+
+    
+    
     log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     logging.basicConfig(level=logging.INFO, format=log_fmt,filename = 'satstation.log', filemode='a')
     
+
+
     sys.exit(main())
