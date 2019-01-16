@@ -14,6 +14,7 @@ import numpy as np
 import hid
 import wave
 import sounddevice as sd
+import soundfile as sf
 import pathlib
 
 import matplotlib
@@ -104,7 +105,7 @@ def read_TLE(TLE_dir):
     return satellites 
 
 
-def record_pass(sdev,pass_df,rec_file,fs,doppler_switch = True):
+def record_pass(sdev,pass_df,rec_file,fs, doppler_switch = False):
     logger = logging.getLogger(__name__)
     logger.info('recording pass of {0} starting @ {1}'.format(pass_df.iloc[0]['Satellite'],pass_df.iloc[0]['UTC_time']))
     sd.default.samplerate = fs
@@ -113,20 +114,23 @@ def record_pass(sdev,pass_df,rec_file,fs,doppler_switch = True):
     logger.info('satellite pass duration: {0} seconds'.format(duration))
     logger.info('maximum elevation: {0} degrees'.format(pass_df['Altitude_degrees'].max()))
     logger.info('f0: {0} kHz'.format(1e-3* pass_df.iloc[0]['f0']))
-    satrec = sd.rec(int(duration * fs), samplerate=fs, channels=2)
+    #satrec = sd.rec(int(duration * fs), samplerate=fs, channels=2)
+    ts = sky.load.timescale()
+    q = queue.Queue()
     fcd = FCDProPlus()
     fcd.set_freq(pass_df.iloc[0]['f0'] )
-    for i,r in pass_df.iterrows():
-        wait_until(r['UTC_time'])
-        if doppler_switch:
-            fcd.set_freq(r['freq'] )
-            logger.info('doppler step at {0}: {1} Hz'.format(r['UTC_time'],r['freq']))
-
-    sd.wait()
-    logger.info('recorded {0} samples @ {1} kHz'.format(satrec.shape[0], fs/1e3))
-    logger.info('saving samples to {0}'.format(rec_file))
-    wavfile.write(rec_file, fs, satrec)
-    logger.info('finished saving')
+    # Make sure the file is opened before recording anything:
+    with sf.SoundFile(rec_file, mode='x', samplerate=fs, channels=2, subtype='PCM_16') as file:
+        with sd.InputStream(samplerate=fs, device=0, channels=2, callback=callback):
+            for i,r in pass_df.iterrows():
+                t = ts.now() 
+                while t.utc_datetime() < r['UTC_time']:
+                    file.write(q.get())
+                    t = ts.now() 
+                if doppler_switch:
+                    fcd.set_freq(r['freq'] )
+                    logger.info('doppler step at {0}: {1} Hz'.format(r['UTC_time'],r['freq']))
+    logger.info('finished recording {0}'.format(rec_file))
 
 def next_pass (config_json,verbose = False):
     c = 299792458 # speed of light m/s
@@ -187,17 +191,6 @@ def next_pass (config_json,verbose = False):
                             break
     return cur_df
 
-def wait_until(target_utc, verbose=False):
-    logger = logging.getLogger(__name__)
-    ts = sky.load.timescale()
-    t = ts.now() 
-    # wait until defined time
-    logger.info('waiting until {0}'.format(target_utc))
-    if verbose:
-        print('waiting until {0}'.format(target_utc))
-    while target_utc >t.utc_datetime() :
-        t = ts.now()
-
 def read_config(config_json): 
     if os.path.isfile(config_json): 
         with open(config_json, 'r') as f: 
@@ -224,6 +217,15 @@ def main():
             config_json['TLE_dir'] = str(project_dir)
     else:
         config_json['TLE_dir'] = str(project_dir)
+
+
+    if 'log_dir' in config_json.keys():
+        if os.path.isdir(config_json['log_dir']):
+            print("couldn't find log_dir ({0}). Defaulting to {1} ".format(config_json['TLE_dir'],'./log'))
+            logger.warning("couldn't find TLE_dir ({0}). Defaulting to {1} ".format(config_json['TLE_dir'],'./log'))
+            config_json['log_dir'] = './log'
+    else:
+        config_json['log_dir'] = './log'
 
 
     if 'log_dir' in config_json.keys():
@@ -262,6 +264,8 @@ def main():
     if not dongle_sdev:
         logger.error('Did not find FUNcube Dongle V2.0 !')
 
+    dongle_sdev = 1
+
     if config_json and dongle_sdev:
         
         tmp = sd.default.device
@@ -283,7 +287,12 @@ def main():
             fig_file = os.path.join(config_json['Recording_dir'],filename + '.png')
 
             # wait until next pass
-            wait_until(pass_df.iloc[0]['UTC_time'])
+            t = ts.now() 
+            # wait until defined time
+            logger.info('waiting until {0}'.format(target_utc))
+            while t < pass_df.iloc[0]['UTC_time']:
+                t = ts.now()
+
             logger.info('starting recording at {0}'.format(ts.now().utc_datetime()))
             # record pass
            
@@ -306,7 +315,15 @@ def main():
             
             plt.savefig(fig_file)
 
-     
+
+
+
+
+def callback(indata, frames, time, status):
+    """This is called (from a separate thread) for each audio block."""
+    q.put(indata.copy())
+
+
 
 if __name__ == '__main__':
 
