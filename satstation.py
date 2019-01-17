@@ -119,6 +119,10 @@ def record_pass(sdev,pass_df,rec_file,fs, doppler_switch = False):
     q = queue.Queue()
     fcd = FCDProPlus()
     fcd.set_freq(pass_df.iloc[0]['f0'] )
+
+    def callback(indata, frames, time, status):    """This is called (from a separate thread) for each audio block."""
+        q.put(indata.copy())
+
     # Make sure the file is opened before recording anything:
     with sf.SoundFile(rec_file, mode='x', samplerate=fs, channels=2, subtype='PCM_16') as file:
         with sd.InputStream(samplerate=fs, device=0, channels=2, callback=callback):
@@ -319,9 +323,8 @@ def main():
 
 
 
-def callback(indata, frames, time, status):
-    """This is called (from a separate thread) for each audio block."""
-    q.put(indata.copy())
+#def callback(indata, frames, time, status):    """This is called (from a separate thread) for each audio block."""
+#    q.put(indata.copy())
 
 
 
