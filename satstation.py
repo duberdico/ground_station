@@ -104,6 +104,8 @@ def read_TLE(TLE_dir):
                 satellites.update(sky.load.tle(os.path.join(TLE_dir,file))) 
     return satellites 
 
+def callback(indata, frames, time, status):
+    q.put(indata.copy())
 
 def record_pass(sdev,pass_df,rec_file,fs, doppler_switch = False):
     logger = logging.getLogger(__name__)
@@ -119,9 +121,6 @@ def record_pass(sdev,pass_df,rec_file,fs, doppler_switch = False):
     q = queue.Queue()
     fcd = FCDProPlus()
     fcd.set_freq(pass_df.iloc[0]['f0'] )
-
-    def callback(indata, frames, time, status):    """This is called (from a separate thread) for each audio block."""
-        q.put(indata.copy())
 
     # Make sure the file is opened before recording anything:
     with sf.SoundFile(rec_file, mode='x', samplerate=fs, channels=2, subtype='PCM_16') as file:
@@ -268,8 +267,6 @@ def main():
     if not dongle_sdev:
         logger.error('Did not find FUNcube Dongle V2.0 !')
 
-    dongle_sdev = 1
-
     if config_json and dongle_sdev:
         
         tmp = sd.default.device
@@ -293,8 +290,8 @@ def main():
             # wait until next pass
             t = ts.now() 
             # wait until defined time
-            logger.info('waiting until {0}'.format(target_utc))
-            while t < pass_df.iloc[0]['UTC_time']:
+            logger.info('waiting until {0}'.format(pass_df.iloc[0]['UTC_time']))
+            while t.utc_datetime() < pass_df.iloc[0]['UTC_time']:
                 t = ts.now()
 
             logger.info('starting recording at {0}'.format(ts.now().utc_datetime()))
