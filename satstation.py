@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 
 """A simple python script template.
 """
@@ -16,7 +16,7 @@ import wave
 import sounddevice as sd
 import soundfile as sf
 import pathlib
-
+import queue
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -91,8 +91,6 @@ class FCDProPlus(object):
             raise IOError ('Cant set freq')
         d.close()
 
-
-
 def read_TLE(TLE_dir):
     logger = logging.getLogger(__name__)
     logger.info('reading TLE data from {0} UTC'.format(TLE_dir))
@@ -118,13 +116,13 @@ def record_pass(sdev,pass_df,rec_file,fs, doppler_switch = False):
     logger.info('f0: {0} kHz'.format(1e-3* pass_df.iloc[0]['f0']))
     #satrec = sd.rec(int(duration * fs), samplerate=fs, channels=2)
     ts = sky.load.timescale()
-    q = queue.Queue()
+    #q = queue.Queue()
     fcd = FCDProPlus()
     fcd.set_freq(pass_df.iloc[0]['f0'] )
 
     # Make sure the file is opened before recording anything:
-    with sf.SoundFile(rec_file, mode='x', samplerate=fs, channels=2, subtype='PCM_16') as file:
-        with sd.InputStream(samplerate=fs, device=0, channels=2, callback=callback):
+    with sf.SoundFile(rec_file, mode='x', samplerate=int(fs), channels=2, subtype='PCM_16') as file:
+        with sd.InputStream(samplerate=int(fs), device=0, channels=2, callback=callback):
             for i,r in pass_df.iterrows():
                 t = ts.now() 
                 while t.utc_datetime() < r['UTC_time']:
@@ -167,8 +165,6 @@ def next_pass (config_json,verbose = False):
             k = j[1:] - j[0:-1]
             s = np.argwhere(k == 1).reshape(-1)
             e = np.argwhere(k == -1).reshape(-1)
-            print(s)
-            print(e)
             for si in s:
                 h = e[e>si].reshape(-1).min()
                 if h > 0:
@@ -199,6 +195,9 @@ def read_config(config_json):
         with open(config_json, 'r') as f: 
             config_data = json.load(f) 
     return(config_data) 
+
+
+q = queue.Queue()
 
 def main():
     logger = logging.getLogger(__name__)
@@ -232,7 +231,10 @@ def main():
 
 
     if 'log_dir' in config_json.keys():
-        if os.path.isdir(config_json['log_dir']):
+         if os.path.isdir(config_json['log_dir']):
+            #logging.basicConfig(level=logging.INFO, format=log_fmt, filename = 'satstation.log')
+            pass
+         else:
             print("couldn't find log_dir ({0}). Defaulting to {1} ".format(config_json['TLE_dir'],'./log'))
             logger.warning("couldn't find TLE_dir ({0}). Defaulting to {1} ".format(config_json['TLE_dir'],'./log'))
             config_json['log_dir'] = './log'
@@ -255,8 +257,6 @@ def main():
         if 'FUNcube Dongle V2.0' in dev['product_string']:
             dongle_dev = dev
             break
-
-
     dongle_sdev = None
     for i, sdev in enumerate(sd.query_devices(device=None, kind=None)):
         if 'FUNcube Dongle V2.0' in sdev['name']:
@@ -339,17 +339,13 @@ if __name__ == '__main__':
     
     args = parser.parse_args()
 
-
-    print(args)
-
     if args.verbose:
         verbose = True
 
     
     
     log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    logging.basicConfig(level=logging.INFO, format=log_fmt, filename = 'log.txt')
-    
-
+    logging.basicConfig(level=logging.INFO, format=log_fmt, filename = 'satstation.log')
+   
 
     sys.exit(main())

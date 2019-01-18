@@ -1,30 +1,219 @@
-2019-01-09 22:12:30,141 - __main__ - INFO - ++++++++++++++++++++++++++++++++++++++++
-2019-01-09 22:12:30,141 - __main__ - INFO - running pandas v0.23.4
-2019-01-09 22:12:30,142 - __main__ - INFO - running sounddevice v0.3.12
-2019-01-09 22:12:30,142 - __main__ - INFO - ++++++++++++++++++++++++++++++++++++++++
-2019-01-09 22:12:30,142 - __main__ - INFO - running in directory /usr/local/src/sat_station
-2019-01-09 22:12:30,143 - __main__ - WARNING - couldn't find TLE_dir (.). Defaulting to /usr/local/src/sat_station 
-2019-01-09 22:12:30,157 - __main__ - INFO - found FUNcube Dongle V2.0
-2019-01-09 22:12:30,304 - __main__ - INFO - reading TLE data from /usr/local/src/sat_station
-2019-01-09 22:12:30,370 - __main__ - INFO - now time is 2019-01-09 22:12:30.370000+00:00 UTC
-2019-01-09 22:12:30,380 - __main__ - INFO - looking for NOAA 18 [B] passes
-2019-01-09 22:12:55,507 - __main__ - INFO - looking for NOAA 15 [B] passes
-2019-01-09 22:13:00,848 - __main__ - INFO - looking for NOAA 9 [P] passes
-2019-01-10 21:17:16,229 - __main__ - INFO - ++++++++++++++++++++++++++++++++++++++++
-2019-01-10 21:17:16,230 - __main__ - INFO - running pandas v0.23.4
-2019-01-10 21:17:16,231 - __main__ - INFO - running sounddevice v0.3.12
-2019-01-10 21:17:16,231 - __main__ - INFO - ++++++++++++++++++++++++++++++++++++++++
-2019-01-10 21:17:16,233 - __main__ - INFO - running in directory /usr/local/src/sat_station
-2019-01-10 21:17:16,234 - __main__ - WARNING - couldn't find TLE_dir (.). Defaulting to /usr/local/src/sat_station 
-2019-01-10 21:17:16,262 - __main__ - INFO - found FUNcube Dongle V2.0
-2019-01-10 21:17:17,247 - __main__ - INFO - reading TLE data from /usr/local/src/sat_station UTC
-2019-01-10 21:19:10,179 - __main__ - INFO - ++++++++++++++++++++++++++++++++++++++++
-2019-01-10 21:19:10,179 - __main__ - INFO - running pandas v0.23.4
-2019-01-10 21:19:10,179 - __main__ - INFO - running sounddevice v0.3.12
-2019-01-10 21:19:10,180 - __main__ - INFO - ++++++++++++++++++++++++++++++++++++++++
-2019-01-10 21:19:10,180 - __main__ - INFO - running in directory /usr/local/src/sat_station
-2019-01-10 21:19:10,181 - __main__ - WARNING - couldn't find TLE_dir (.). Defaulting to /usr/local/src/sat_station 
-2019-01-10 21:19:10,195 - __main__ - INFO - found FUNcube Dongle V2.0
-2019-01-10 21:19:10,287 - __main__ - INFO - reading TLE data from /usr/local/src/sat_station UTC
-2019-01-10 21:19:10,355 - __main__ - INFO - now time is 2019-01-10 21:19:10.354000+00:00 UTC
-2019-01-10 21:19:10,373 - __main__ - INFO - looking for NOAA 18 [B] passes
+2019-01-18 10:39:45,917 - __main__ - INFO - ++++++++++++++++++++++++++++++++++++++++
+2019-01-18 10:39:45,918 - __main__ - INFO - running pandas v0.23.4
+2019-01-18 10:39:45,918 - __main__ - INFO - running sounddevice v0.3.12
+2019-01-18 10:39:45,918 - __main__ - INFO - ++++++++++++++++++++++++++++++++++++++++
+2019-01-18 10:39:45,919 - __main__ - INFO - running in directory /usr/local/src/sat_station
+2019-01-18 10:39:45,920 - __main__ - WARNING - couldn't find TLE_dir (.). Defaulting to /usr/local/src/sat_station 
+2019-01-18 10:39:45,920 - __main__ - WARNING - couldn't find TLE_dir (/usr/local/src/sat_station). Defaulting to ./log 
+2019-01-18 10:39:45,937 - __main__ - INFO - found FUNcube Dongle V2.0
+2019-01-18 10:40:00,040 - __main__ - INFO - ++++++++++++++++++++++++++++++++++++++++
+2019-01-18 10:40:00,040 - __main__ - INFO - running pandas v0.23.4
+2019-01-18 10:40:00,041 - __main__ - INFO - running sounddevice v0.3.12
+2019-01-18 10:40:00,041 - __main__ - INFO - ++++++++++++++++++++++++++++++++++++++++
+2019-01-18 10:40:00,042 - __main__ - INFO - running in directory /usr/local/src/sat_station
+2019-01-18 10:40:00,043 - __main__ - WARNING - couldn't find TLE_dir (.). Defaulting to /usr/local/src/sat_station 
+2019-01-18 10:40:00,044 - __main__ - WARNING - couldn't find TLE_dir (/usr/local/src/sat_station). Defaulting to ./log 
+2019-01-18 10:40:00,059 - __main__ - INFO - found FUNcube Dongle V2.0
+2019-01-18 10:40:02,325 - __main__ - INFO - reading TLE data from /usr/local/src/sat_station UTC
+2019-01-18 10:40:02,412 - __main__ - INFO - now time is 2019-01-18 10:40:02.411000+00:00 UTC
+2019-01-18 10:41:46,313 - __main__ - INFO - ++++++++++++++++++++++++++++++++++++++++
+2019-01-18 10:41:46,314 - __main__ - INFO - running pandas v0.23.4
+2019-01-18 10:41:46,321 - __main__ - INFO - running sounddevice v0.3.12
+2019-01-18 10:41:46,321 - __main__ - INFO - ++++++++++++++++++++++++++++++++++++++++
+2019-01-18 10:41:46,322 - __main__ - INFO - running in directory /usr/local/src/sat_station
+2019-01-18 10:41:46,323 - __main__ - WARNING - couldn't find TLE_dir (/usr/local/etc/TLE). Defaulting to /usr/local/src/sat_station 
+2019-01-18 10:41:46,324 - __main__ - WARNING - couldn't find TLE_dir (/usr/local/src/sat_station). Defaulting to ./log 
+2019-01-18 10:41:46,336 - __main__ - INFO - found FUNcube Dongle V2.0
+2019-01-18 10:41:47,211 - __main__ - INFO - reading TLE data from /usr/local/src/sat_station UTC
+2019-01-18 10:41:47,259 - __main__ - INFO - now time is 2019-01-18 10:41:47.259000+00:00 UTC
+2019-01-18 10:42:50,831 - __main__ - INFO - ++++++++++++++++++++++++++++++++++++++++
+2019-01-18 10:42:50,832 - __main__ - INFO - running pandas v0.23.4
+2019-01-18 10:42:50,832 - __main__ - INFO - running sounddevice v0.3.12
+2019-01-18 10:42:50,832 - __main__ - INFO - ++++++++++++++++++++++++++++++++++++++++
+2019-01-18 10:42:50,833 - __main__ - INFO - running in directory /usr/local/src/sat_station
+2019-01-18 10:42:50,834 - __main__ - WARNING - couldn't find TLE_dir (/usr/local/etc/TLE). Defaulting to /usr/local/src/sat_station 
+2019-01-18 10:42:50,834 - __main__ - WARNING - couldn't find TLE_dir (/usr/local/src/sat_station). Defaulting to ./log 
+2019-01-18 10:42:50,849 - __main__ - INFO - found FUNcube Dongle V2.0
+2019-01-18 10:42:50,943 - __main__ - INFO - reading TLE data from /usr/local/src/sat_station UTC
+2019-01-18 10:42:51,246 - __main__ - INFO - now time is 2019-01-18 10:42:51.246000+00:00 UTC
+2019-01-18 10:42:51,256 - __main__ - INFO - looking for NOAA 18 [B] passes
+2019-01-18 10:43:14,310 - __main__ - INFO - looking for NOAA 15 [B] passes
+2019-01-18 10:43:19,340 - __main__ - INFO - looking for NOAA 9 [P] passes
+2019-01-18 10:43:24,401 - __main__ - INFO - next pass is of NOAA 18 [B] starting at UTC 2019-01-18 11:33:21.246000+00:00 lasting 790 seconds
+2019-01-18 10:43:24,406 - __main__ - INFO - waiting until 2019-01-18 11:33:21.246000+00:00
+2019-01-18 11:43:12,324 - __main__ - INFO - ++++++++++++++++++++++++++++++++++++++++
+2019-01-18 11:43:12,324 - __main__ - INFO - running pandas v0.23.4
+2019-01-18 11:43:12,325 - __main__ - INFO - running sounddevice v0.3.12
+2019-01-18 11:43:12,325 - __main__ - INFO - ++++++++++++++++++++++++++++++++++++++++
+2019-01-18 11:43:12,326 - __main__ - INFO - running in directory /usr/local/src/sat_station
+2019-01-18 11:43:12,326 - __main__ - WARNING - couldn't find TLE_dir (/usr/local/etc/TLE). Defaulting to /usr/local/src/sat_station 
+2019-01-18 11:43:12,327 - __main__ - WARNING - couldn't find TLE_dir (/usr/local/src/sat_station). Defaulting to ./log 
+2019-01-18 11:43:12,342 - __main__ - INFO - found FUNcube Dongle V2.0
+2019-01-18 11:43:12,434 - __main__ - INFO - reading TLE data from /usr/local/src/sat_station UTC
+2019-01-18 11:43:12,746 - __main__ - INFO - now time is 2019-01-18 11:43:12.746000+00:00 UTC
+2019-01-18 11:43:12,756 - __main__ - INFO - looking for NOAA 18 [B] passes
+2019-01-18 11:43:36,188 - __main__ - INFO - looking for NOAA 15 [B] passes
+2019-01-18 11:43:41,507 - __main__ - INFO - looking for NOAA 9 [P] passes
+2019-01-18 11:43:46,595 - __main__ - INFO - next pass is of NOAA 15 [B] starting at UTC 2019-01-18 11:54:02.746000+00:00 lasting 450 seconds
+2019-01-18 11:43:46,604 - __main__ - INFO - waiting until 2019-01-18 11:54:02.746000+00:00
+2019-01-18 11:54:02,749 - __main__ - INFO - starting recording at 2019-01-18 11:54:02.749000+00:00
+2019-01-18 11:54:02,753 - __main__ - INFO - recording pass of NOAA 15 [B] starting @ 2019-01-18 11:54:02.746000+00:00
+2019-01-18 11:54:02,757 - __main__ - INFO - satellite pass duration: 450 seconds
+2019-01-18 11:54:02,759 - __main__ - INFO - maximum elevation: 4.077105786263926 degrees
+2019-01-18 11:54:02,761 - __main__ - INFO - f0: 137000.0 kHz
+2019-01-18 11:54:03,703 - __main__ - INFO - doppler step at 2019-01-18 11:54:02.746000+00:00: 137001571.0 Hz
+2019-01-18 11:54:12,753 - __main__ - INFO - doppler step at 2019-01-18 11:54:12.746000+00:00: 137001523.0 Hz
+2019-01-18 11:54:22,994 - __main__ - INFO - doppler step at 2019-01-18 11:54:22.746000+00:00: 137001472.0 Hz
+2019-01-18 11:54:33,235 - __main__ - INFO - doppler step at 2019-01-18 11:54:32.746000+00:00: 137001420.0 Hz
+2019-01-18 11:54:43,477 - __main__ - INFO - doppler step at 2019-01-18 11:54:42.746000+00:00: 137001367.0 Hz
+2019-01-18 11:54:53,718 - __main__ - INFO - doppler step at 2019-01-18 11:54:52.746000+00:00: 137001311.0 Hz
+2019-01-18 11:55:02,751 - __main__ - INFO - doppler step at 2019-01-18 11:55:02.746000+00:00: 137001254.0 Hz
+2019-01-18 11:55:12,992 - __main__ - INFO - doppler step at 2019-01-18 11:55:12.746000+00:00: 137001196.0 Hz
+2019-01-18 11:55:23,233 - __main__ - INFO - doppler step at 2019-01-18 11:55:22.746000+00:00: 137001135.0 Hz
+2019-01-18 11:55:33,474 - __main__ - INFO - doppler step at 2019-01-18 11:55:32.746000+00:00: 137001073.0 Hz
+2019-01-18 11:55:43,716 - __main__ - INFO - doppler step at 2019-01-18 11:55:42.746000+00:00: 137001010.0 Hz
+2019-01-18 11:55:52,752 - __main__ - INFO - doppler step at 2019-01-18 11:55:52.746000+00:00: 137000945.0 Hz
+2019-01-18 11:56:02,993 - __main__ - INFO - doppler step at 2019-01-18 11:56:02.746000+00:00: 137000879.0 Hz
+2019-01-18 11:56:13,234 - __main__ - INFO - doppler step at 2019-01-18 11:56:12.746000+00:00: 137000811.0 Hz
+2019-01-18 11:56:23,475 - __main__ - INFO - doppler step at 2019-01-18 11:56:22.746000+00:00: 137000742.0 Hz
+2019-01-18 11:56:33,716 - __main__ - INFO - doppler step at 2019-01-18 11:56:32.746000+00:00: 137000672.0 Hz
+2019-01-18 11:56:42,751 - __main__ - INFO - doppler step at 2019-01-18 11:56:42.746000+00:00: 137000601.0 Hz
+2019-01-18 11:56:52,992 - __main__ - INFO - doppler step at 2019-01-18 11:56:52.746000+00:00: 137000529.0 Hz
+2019-01-18 11:57:03,349 - __main__ - INFO - doppler step at 2019-01-18 11:57:02.746000+00:00: 137000456.0 Hz
+2019-01-18 11:57:13,589 - __main__ - INFO - doppler step at 2019-01-18 11:57:12.746000+00:00: 137000382.0 Hz
+2019-01-18 11:57:22,752 - __main__ - INFO - doppler step at 2019-01-18 11:57:22.746000+00:00: 137000307.0 Hz
+2019-01-18 11:57:32,993 - __main__ - INFO - doppler step at 2019-01-18 11:57:32.746000+00:00: 137000232.0 Hz
+2019-01-18 11:57:43,234 - __main__ - INFO - doppler step at 2019-01-18 11:57:42.746000+00:00: 137000156.0 Hz
+2019-01-18 11:57:53,474 - __main__ - INFO - doppler step at 2019-01-18 11:57:52.746000+00:00: 137000080.0 Hz
+2019-01-18 11:58:03,716 - __main__ - INFO - doppler step at 2019-01-18 11:58:02.746000+00:00: 137000005.0 Hz
+2019-01-18 11:58:12,752 - __main__ - INFO - doppler step at 2019-01-18 11:58:12.746000+00:00: 136999929.0 Hz
+2019-01-18 11:58:22,993 - __main__ - INFO - doppler step at 2019-01-18 11:58:22.746000+00:00: 136999853.0 Hz
+2019-01-18 11:58:33,234 - __main__ - INFO - doppler step at 2019-01-18 11:58:32.746000+00:00: 136999777.0 Hz
+2019-01-18 11:58:43,475 - __main__ - INFO - doppler step at 2019-01-18 11:58:42.746000+00:00: 136999702.0 Hz
+2019-01-18 11:58:53,716 - __main__ - INFO - doppler step at 2019-01-18 11:58:52.746000+00:00: 136999627.0 Hz
+2019-01-18 11:59:02,751 - __main__ - INFO - doppler step at 2019-01-18 11:59:02.746000+00:00: 136999553.0 Hz
+2019-01-18 11:59:12,992 - __main__ - INFO - doppler step at 2019-01-18 11:59:12.746000+00:00: 136999480.0 Hz
+2019-01-18 11:59:23,233 - __main__ - INFO - doppler step at 2019-01-18 11:59:22.746000+00:00: 136999408.0 Hz
+2019-01-18 11:59:33,475 - __main__ - INFO - doppler step at 2019-01-18 11:59:32.746000+00:00: 136999337.0 Hz
+2019-01-18 11:59:43,716 - __main__ - INFO - doppler step at 2019-01-18 11:59:42.746000+00:00: 136999267.0 Hz
+2019-01-18 11:59:52,751 - __main__ - INFO - doppler step at 2019-01-18 11:59:52.746000+00:00: 136999198.0 Hz
+2019-01-18 12:00:03,374 - __main__ - INFO - doppler step at 2019-01-18 12:00:02.746000+00:00: 136999130.0 Hz
+2019-01-18 12:00:13,615 - __main__ - INFO - doppler step at 2019-01-18 12:00:12.746000+00:00: 136999064.0 Hz
+2019-01-18 12:00:22,750 - __main__ - INFO - doppler step at 2019-01-18 12:00:22.746000+00:00: 136998999.0 Hz
+2019-01-18 12:00:32,991 - __main__ - INFO - doppler step at 2019-01-18 12:00:32.746000+00:00: 136998935.0 Hz
+2019-01-18 12:00:43,233 - __main__ - INFO - doppler step at 2019-01-18 12:00:42.746000+00:00: 136998874.0 Hz
+2019-01-18 12:00:53,474 - __main__ - INFO - doppler step at 2019-01-18 12:00:52.746000+00:00: 136998813.0 Hz
+2019-01-18 12:01:03,715 - __main__ - INFO - doppler step at 2019-01-18 12:01:02.746000+00:00: 136998755.0 Hz
+2019-01-18 12:01:12,753 - __main__ - INFO - doppler step at 2019-01-18 12:01:12.746000+00:00: 136998698.0 Hz
+2019-01-18 12:01:22,994 - __main__ - INFO - doppler step at 2019-01-18 12:01:22.746000+00:00: 136998642.0 Hz
+2019-01-18 12:01:33,235 - __main__ - INFO - doppler step at 2019-01-18 12:01:32.746000+00:00: 136998589.0 Hz
+2019-01-18 12:01:33,747 - __main__ - INFO - finished recording /usr/smbshare/satstation_recs/NOAA_15_20190118_114346.wav
+2019-01-18 12:01:34,979 - __main__ - INFO - reading TLE data from /usr/local/src/sat_station UTC
+2019-01-18 12:01:35,284 - __main__ - INFO - now time is 2019-01-18 12:01:35.284000+00:00 UTC
+2019-01-18 12:01:35,295 - __main__ - INFO - looking for NOAA 18 [B] passes
+2019-01-18 12:02:00,752 - __main__ - INFO - looking for NOAA 15 [B] passes
+2019-01-18 12:02:06,388 - __main__ - INFO - looking for NOAA 9 [P] passes
+2019-01-18 12:02:12,298 - __main__ - INFO - next pass is of NOAA 9 [P] starting at UTC 2019-01-18 12:18:05.284000+00:00 lasting 880 seconds
+2019-01-18 12:02:12,303 - __main__ - INFO - waiting until 2019-01-18 12:18:05.284000+00:00
+2019-01-18 12:18:05,286 - __main__ - INFO - starting recording at 2019-01-18 12:18:05.286000+00:00
+2019-01-18 12:18:05,290 - __main__ - INFO - recording pass of NOAA 9 [P] starting @ 2019-01-18 12:18:05.284000+00:00
+2019-01-18 12:18:05,294 - __main__ - INFO - satellite pass duration: 880 seconds
+2019-01-18 12:18:05,296 - __main__ - INFO - maximum elevation: 37.248187263877455 degrees
+2019-01-18 12:18:05,299 - __main__ - INFO - f0: 136770.0 kHz
+2019-01-18 12:18:05,437 - __main__ - INFO - doppler step at 2019-01-18 12:18:05.284000+00:00: 136772923.0 Hz
+2019-01-18 12:18:15,678 - __main__ - INFO - doppler step at 2019-01-18 12:18:15.284000+00:00: 136772918.0 Hz
+2019-01-18 12:18:25,919 - __main__ - INFO - doppler step at 2019-01-18 12:18:25.284000+00:00: 136772913.0 Hz
+2019-01-18 12:18:36,160 - __main__ - INFO - doppler step at 2019-01-18 12:18:35.284000+00:00: 136772907.0 Hz
+2019-01-18 12:18:45,295 - __main__ - INFO - doppler step at 2019-01-18 12:18:45.284000+00:00: 136772900.0 Hz
+2019-01-18 12:18:55,535 - __main__ - INFO - doppler step at 2019-01-18 12:18:55.284000+00:00: 136772892.0 Hz
+2019-01-18 12:19:05,776 - __main__ - INFO - doppler step at 2019-01-18 12:19:05.284000+00:00: 136772884.0 Hz
+2019-01-18 12:19:16,017 - __main__ - INFO - doppler step at 2019-01-18 12:19:15.284000+00:00: 136772875.0 Hz
+2019-01-18 12:19:26,259 - __main__ - INFO - doppler step at 2019-01-18 12:19:25.284000+00:00: 136772865.0 Hz
+2019-01-18 12:19:35,293 - __main__ - INFO - doppler step at 2019-01-18 12:19:35.284000+00:00: 136772853.0 Hz
+2019-01-18 12:19:45,534 - __main__ - INFO - doppler step at 2019-01-18 12:19:45.284000+00:00: 136772841.0 Hz
+2019-01-18 12:19:55,776 - __main__ - INFO - doppler step at 2019-01-18 12:19:55.284000+00:00: 136772828.0 Hz
+2019-01-18 12:20:06,017 - __main__ - INFO - doppler step at 2019-01-18 12:20:05.284000+00:00: 136772813.0 Hz
+2019-01-18 12:20:16,258 - __main__ - INFO - doppler step at 2019-01-18 12:20:15.284000+00:00: 136772797.0 Hz
+2019-01-18 12:20:25,293 - __main__ - INFO - doppler step at 2019-01-18 12:20:25.284000+00:00: 136772780.0 Hz
+2019-01-18 12:20:35,534 - __main__ - INFO - doppler step at 2019-01-18 12:20:35.284000+00:00: 136772760.0 Hz
+2019-01-18 12:20:45,775 - __main__ - INFO - doppler step at 2019-01-18 12:20:45.284000+00:00: 136772740.0 Hz
+2019-01-18 12:20:56,016 - __main__ - INFO - doppler step at 2019-01-18 12:20:55.284000+00:00: 136772717.0 Hz
+2019-01-18 12:21:06,258 - __main__ - INFO - doppler step at 2019-01-18 12:21:05.284000+00:00: 136772692.0 Hz
+2019-01-18 12:21:15,290 - __main__ - INFO - doppler step at 2019-01-18 12:21:15.284000+00:00: 136772665.0 Hz
+2019-01-18 12:21:25,531 - __main__ - INFO - doppler step at 2019-01-18 12:21:25.284000+00:00: 136772635.0 Hz
+2019-01-18 12:21:35,772 - __main__ - INFO - doppler step at 2019-01-18 12:21:35.284000+00:00: 136772603.0 Hz
+2019-01-18 12:21:46,013 - __main__ - INFO - doppler step at 2019-01-18 12:21:45.284000+00:00: 136772568.0 Hz
+2019-01-18 12:21:56,254 - __main__ - INFO - doppler step at 2019-01-18 12:21:55.284000+00:00: 136772529.0 Hz
+2019-01-18 12:22:05,290 - __main__ - INFO - doppler step at 2019-01-18 12:22:05.284000+00:00: 136772487.0 Hz
+2019-01-18 12:22:15,531 - __main__ - INFO - doppler step at 2019-01-18 12:22:15.284000+00:00: 136772441.0 Hz
+2019-01-18 12:22:25,772 - __main__ - INFO - doppler step at 2019-01-18 12:22:25.284000+00:00: 136772391.0 Hz
+2019-01-18 12:22:36,013 - __main__ - INFO - doppler step at 2019-01-18 12:22:35.284000+00:00: 136772336.0 Hz
+2019-01-18 12:22:46,254 - __main__ - INFO - doppler step at 2019-01-18 12:22:45.284000+00:00: 136772277.0 Hz
+2019-01-18 12:22:55,289 - __main__ - INFO - doppler step at 2019-01-18 12:22:55.284000+00:00: 136772211.0 Hz
+2019-01-18 12:23:05,530 - __main__ - INFO - doppler step at 2019-01-18 12:23:05.284000+00:00: 136772140.0 Hz
+2019-01-18 12:23:15,772 - __main__ - INFO - doppler step at 2019-01-18 12:23:15.284000+00:00: 136772062.0 Hz
+2019-01-18 12:23:26,013 - __main__ - INFO - doppler step at 2019-01-18 12:23:25.284000+00:00: 136771978.0 Hz
+2019-01-18 12:23:36,254 - __main__ - INFO - doppler step at 2019-01-18 12:23:35.284000+00:00: 136771886.0 Hz
+2019-01-18 12:23:45,289 - __main__ - INFO - doppler step at 2019-01-18 12:23:45.284000+00:00: 136771787.0 Hz
+2019-01-18 12:23:55,530 - __main__ - INFO - doppler step at 2019-01-18 12:23:55.284000+00:00: 136771679.0 Hz
+2019-01-18 12:24:05,771 - __main__ - INFO - doppler step at 2019-01-18 12:24:05.284000+00:00: 136771562.0 Hz
+2019-01-18 12:24:16,013 - __main__ - INFO - doppler step at 2019-01-18 12:24:15.284000+00:00: 136771437.0 Hz
+2019-01-18 12:24:26,254 - __main__ - INFO - doppler step at 2019-01-18 12:24:25.284000+00:00: 136771304.0 Hz
+2019-01-18 12:24:35,290 - __main__ - INFO - doppler step at 2019-01-18 12:24:35.284000+00:00: 136771161.0 Hz
+2019-01-18 12:24:45,531 - __main__ - INFO - doppler step at 2019-01-18 12:24:45.284000+00:00: 136771010.0 Hz
+2019-01-18 12:24:55,772 - __main__ - INFO - doppler step at 2019-01-18 12:24:55.284000+00:00: 136770852.0 Hz
+2019-01-18 12:25:06,014 - __main__ - INFO - doppler step at 2019-01-18 12:25:05.284000+00:00: 136770686.0 Hz
+2019-01-18 12:25:16,254 - __main__ - INFO - doppler step at 2019-01-18 12:25:15.284000+00:00: 136770515.0 Hz
+2019-01-18 12:25:26,495 - __main__ - INFO - doppler step at 2019-01-18 12:25:25.284000+00:00: 136770339.0 Hz
+2019-01-18 12:25:35,289 - __main__ - INFO - doppler step at 2019-01-18 12:25:35.284000+00:00: 136770159.0 Hz
+2019-01-18 12:25:45,530 - __main__ - INFO - doppler step at 2019-01-18 12:25:45.284000+00:00: 136769979.0 Hz
+2019-01-18 12:25:55,771 - __main__ - INFO - doppler step at 2019-01-18 12:25:55.284000+00:00: 136769798.0 Hz
+2019-01-18 12:26:06,013 - __main__ - INFO - doppler step at 2019-01-18 12:26:05.284000+00:00: 136769619.0 Hz
+2019-01-18 12:26:16,254 - __main__ - INFO - doppler step at 2019-01-18 12:26:15.284000+00:00: 136769444.0 Hz
+2019-01-18 12:26:25,289 - __main__ - INFO - doppler step at 2019-01-18 12:26:25.284000+00:00: 136769274.0 Hz
+2019-01-18 12:26:35,530 - __main__ - INFO - doppler step at 2019-01-18 12:26:35.284000+00:00: 136769110.0 Hz
+2019-01-18 12:26:45,771 - __main__ - INFO - doppler step at 2019-01-18 12:26:45.284000+00:00: 136768953.0 Hz
+2019-01-18 12:26:56,012 - __main__ - INFO - doppler step at 2019-01-18 12:26:55.284000+00:00: 136768804.0 Hz
+2019-01-18 12:27:06,254 - __main__ - INFO - doppler step at 2019-01-18 12:27:05.284000+00:00: 136768663.0 Hz
+2019-01-18 12:27:15,291 - __main__ - INFO - doppler step at 2019-01-18 12:27:15.284000+00:00: 136768531.0 Hz
+2019-01-18 12:27:25,532 - __main__ - INFO - doppler step at 2019-01-18 12:27:25.284000+00:00: 136768408.0 Hz
+2019-01-18 12:27:35,773 - __main__ - INFO - doppler step at 2019-01-18 12:27:35.284000+00:00: 136768294.0 Hz
+2019-01-18 12:27:46,014 - __main__ - INFO - doppler step at 2019-01-18 12:27:45.284000+00:00: 136768188.0 Hz
+2019-01-18 12:27:56,255 - __main__ - INFO - doppler step at 2019-01-18 12:27:55.284000+00:00: 136768090.0 Hz
+2019-01-18 12:28:05,289 - __main__ - INFO - doppler step at 2019-01-18 12:28:05.284000+00:00: 136768000.0 Hz
+2019-01-18 12:28:15,530 - __main__ - INFO - doppler step at 2019-01-18 12:28:15.284000+00:00: 136767917.0 Hz
+2019-01-18 12:28:25,771 - __main__ - INFO - doppler step at 2019-01-18 12:28:25.284000+00:00: 136767841.0 Hz
+2019-01-18 12:28:36,012 - __main__ - INFO - doppler step at 2019-01-18 12:28:35.284000+00:00: 136767771.0 Hz
+2019-01-18 12:28:46,253 - __main__ - INFO - doppler step at 2019-01-18 12:28:45.284000+00:00: 136767707.0 Hz
+2019-01-18 12:28:55,290 - __main__ - INFO - doppler step at 2019-01-18 12:28:55.284000+00:00: 136767648.0 Hz
+2019-01-18 12:29:05,531 - __main__ - INFO - doppler step at 2019-01-18 12:29:05.284000+00:00: 136767594.0 Hz
+2019-01-18 12:29:15,772 - __main__ - INFO - doppler step at 2019-01-18 12:29:15.284000+00:00: 136767545.0 Hz
+2019-01-18 12:29:26,014 - __main__ - INFO - doppler step at 2019-01-18 12:29:25.284000+00:00: 136767500.0 Hz
+2019-01-18 12:29:36,254 - __main__ - INFO - doppler step at 2019-01-18 12:29:35.284000+00:00: 136767458.0 Hz
+2019-01-18 12:29:45,291 - __main__ - INFO - doppler step at 2019-01-18 12:29:45.284000+00:00: 136767421.0 Hz
+2019-01-18 12:29:55,532 - __main__ - INFO - doppler step at 2019-01-18 12:29:55.284000+00:00: 136767386.0 Hz
+2019-01-18 12:30:05,773 - __main__ - INFO - doppler step at 2019-01-18 12:30:05.284000+00:00: 136767354.0 Hz
+2019-01-18 12:30:16,014 - __main__ - INFO - doppler step at 2019-01-18 12:30:15.284000+00:00: 136767325.0 Hz
+2019-01-18 12:30:26,255 - __main__ - INFO - doppler step at 2019-01-18 12:30:25.284000+00:00: 136767298.0 Hz
+2019-01-18 12:30:35,289 - __main__ - INFO - doppler step at 2019-01-18 12:30:35.284000+00:00: 136767274.0 Hz
+2019-01-18 12:30:45,531 - __main__ - INFO - doppler step at 2019-01-18 12:30:45.284000+00:00: 136767251.0 Hz
+2019-01-18 12:30:55,771 - __main__ - INFO - doppler step at 2019-01-18 12:30:55.284000+00:00: 136767231.0 Hz
+2019-01-18 12:31:06,013 - __main__ - INFO - doppler step at 2019-01-18 12:31:05.284000+00:00: 136767212.0 Hz
+2019-01-18 12:31:16,254 - __main__ - INFO - doppler step at 2019-01-18 12:31:15.284000+00:00: 136767195.0 Hz
+2019-01-18 12:31:25,290 - __main__ - INFO - doppler step at 2019-01-18 12:31:25.284000+00:00: 136767179.0 Hz
+2019-01-18 12:31:35,531 - __main__ - INFO - doppler step at 2019-01-18 12:31:35.284000+00:00: 136767164.0 Hz
+2019-01-18 12:31:45,772 - __main__ - INFO - doppler step at 2019-01-18 12:31:45.284000+00:00: 136767151.0 Hz
+2019-01-18 12:31:56,014 - __main__ - INFO - doppler step at 2019-01-18 12:31:55.284000+00:00: 136767139.0 Hz
+2019-01-18 12:32:06,254 - __main__ - INFO - doppler step at 2019-01-18 12:32:05.284000+00:00: 136767128.0 Hz
+2019-01-18 12:32:15,290 - __main__ - INFO - doppler step at 2019-01-18 12:32:15.284000+00:00: 136767118.0 Hz
+2019-01-18 12:32:25,531 - __main__ - INFO - doppler step at 2019-01-18 12:32:25.284000+00:00: 136767109.0 Hz
+2019-01-18 12:32:35,772 - __main__ - INFO - doppler step at 2019-01-18 12:32:35.284000+00:00: 136767100.0 Hz
+2019-01-18 12:32:46,013 - __main__ - INFO - doppler step at 2019-01-18 12:32:45.284000+00:00: 136767093.0 Hz
+2019-01-18 12:32:47,345 - __main__ - INFO - finished recording /usr/smbshare/satstation_recs/NOAA_9_20190118_120212.wav
+2019-01-18 12:32:48,426 - __main__ - INFO - reading TLE data from /usr/local/src/sat_station UTC
+2019-01-18 12:32:48,723 - __main__ - INFO - now time is 2019-01-18 12:32:48.723000+00:00 UTC
+2019-01-18 12:32:48,732 - __main__ - INFO - looking for NOAA 18 [B] passes
+2019-01-18 12:33:14,247 - __main__ - INFO - looking for NOAA 15 [B] passes
+2019-01-18 12:33:19,849 - __main__ - INFO - looking for NOAA 9 [P] passes
+2019-01-18 12:33:25,533 - __main__ - INFO - next pass is of NOAA 18 [B] starting at UTC 2019-01-18 13:13:58.723000+00:00 lasting 550 seconds
+2019-01-18 12:33:25,537 - __main__ - INFO - waiting until 2019-01-18 13:13:58.723000+00:00
