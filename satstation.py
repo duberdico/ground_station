@@ -114,12 +114,10 @@ def record_pass(sdev,pass_df,rec_file,fs, doppler_switch = False):
     logger.info('satellite pass duration: {0} seconds'.format(duration))
     logger.info('maximum elevation: {0} degrees'.format(pass_df['Altitude_degrees'].max()))
     logger.info('f0: {0} kHz'.format(1e-3* pass_df.iloc[0]['f0']))
-    #satrec = sd.rec(int(duration * fs), samplerate=fs, channels=2)
     ts = sky.load.timescale()
-    #q = queue.Queue()
     fcd = FCDProPlus()
     fcd.set_freq(pass_df.iloc[0]['f0'] )
-
+    fcd_set_if_gain(True)
     # Make sure the file is opened before recording anything:
     with sf.SoundFile(rec_file, mode='x', samplerate=int(fs), channels=2, subtype='PCM_16') as file:
         with sd.InputStream(samplerate=int(fs), device=0, channels=2, callback=callback):
@@ -286,7 +284,7 @@ def main():
             filename = pass_df.iloc[0]['Satellite'].split('[')[0].replace(' ','_') +  ts.now().utc_datetime().strftime("%Y%m%d_%H%M%S")
             rec_file = os.path.join(config_json['Recording_dir'],filename + '.wav')
             fig_file = os.path.join(config_json['Recording_dir'],filename + '.png')
-
+            csv_file = os.path.join(config_json['Recording_dir'],filename + '.csv')
             # wait until next pass
             t = ts.now() 
             # wait until defined time
@@ -313,8 +311,12 @@ def main():
             plt.xticks(rotation='vertical')
             plt.ylabel('Freq [MHz]')
             ax.grid()
+            plt.savefic(fig_file)
+            # save last recorded pass data to csv
+            pass_df.to_csv(csv_file)
             
-            plt.savefig(fig_file)
+            
+            
 
 
 
