@@ -18,6 +18,7 @@ import soundfile as sf
 import pathlib
 import queue
 import matplotlib
+import psutil
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from scipy.io import wavfile
@@ -117,17 +118,18 @@ def record_pass(sdev,pass_df,rec_file,fs, doppler_switch = False):
     ts = sky.load.timescale()
     fcd = FCDProPlus()
     fcd.set_freq(pass_df.iloc[0]['f0'] )
-    fcd_set_if_gain(True)
+    fcd.set_if_gain(True)
     # Make sure the file is opened before recording anything:
     with sf.SoundFile(rec_file, mode='x', samplerate=int(fs), channels=2, subtype='PCM_16') as file:
         with sd.InputStream(samplerate=int(fs), device=0, channels=2, callback=callback):
             for i,r in pass_df.iterrows():
                 t = ts.now() 
                 while t.utc_datetime() < r['UTC_time']:
+                    fcd.set_freq(r['freq'])
                     file.write(q.get())
                     t = ts.now() 
                 if doppler_switch:
-                    fcd.set_freq(r['freq'] )
+                    #fcd.set_freq(r['freq'] )
                     logger.info('doppler step at {0}: {1} Hz'.format(r['UTC_time'],r['freq']))
     logger.info('finished recording {0}'.format(rec_file))
 
@@ -277,7 +279,8 @@ def main():
         fcd.set_freq(137 * 1e6)
         
         ts = sky.load.timescale()
-        while 1:
+        du = psutil.disk_usage('/')
+        while du[3] < 95 : # run while at least 5% of disk space available
             pass_df = next_pass(config_json,verbose=verbose)
             sys.stderr.write('next pass is of {0} starting at UTC {1} lasting {2} seconds\n'.format(pass_df.iloc[0]['Satellite'],pass_df.iloc[0]['UTC_time'], (pass_df.iloc[-1]['UTC_time'] - pass_df.iloc[0]['UTC_time']).seconds))
             logger.info('next pass is of {0} starting at UTC {1} lasting {2} seconds'.format(pass_df.iloc[0]['Satellite'],pass_df.iloc[0]['UTC_time'], (pass_df.iloc[-1]['UTC_time'] - pass_df.iloc[0]['UTC_time']).seconds))
@@ -311,7 +314,7 @@ def main():
             plt.xticks(rotation='vertical')
             plt.ylabel('Freq [MHz]')
             ax.grid()
-            plt.savefic(fig_file)
+            plt.savefig(fig_file)
             # save last recorded pass data to csv
             pass_df.to_csv(csv_file)
             
