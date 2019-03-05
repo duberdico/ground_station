@@ -1,0 +1,65 @@
+couldn't find TLE_dir (/usr/local/etc/TLE). Defaulting to /usr/local/src/sat_station 
+couldn't find log_dir (/usr/local/src/sat_station). Defaulting to ./log 
+{'name': 'FUNcube Dongle V2.0: USB Audio (hw:1,0)', 'default_low_input_latency': 0.0016666666666666668, 'default_low_output_latency': -1.0, 'hostapi': 0, 'max_input_channels': 2, 'max_output_channels': 0, 'default_samplerate': 192000.0, 'default_high_input_latency': 0.008, 'dev': 0, 'default_high_output_latency': -1.0}
+svmem(total=1024184320, available=889270272, percent=13.2, used=75608064, free=769232896, active=133627904, inactive=88858624, buffers=17829888, cached=161513472, shared=7028736, slab=19181568)
+next pass is of NOAA 18 [B] starting at UTC 2019-03-04 21:04:29.937000+00:00 lasting 870 seconds
+Process Process-1:
+Traceback (most recent call last):
+  File "/usr/lib/python3.5/multiprocessing/process.py", line 249, in _bootstrap
+    self.run()
+  File "/usr/lib/python3.5/multiprocessing/process.py", line 93, in run
+    self._target(*self._args, **self._kwargs)
+  File "./satstation.py", line 115, in record
+    file.write(q.get())
+  File "/home/pi/.local/lib/python3.5/site-packages/soundfile.py", line 990, in write
+    written = self._array_io('write', data, len(data))
+  File "/home/pi/.local/lib/python3.5/site-packages/soundfile.py", line 1310, in _array_io
+    return self._cdata_io(action, cdata, ctype, frames)
+  File "/home/pi/.local/lib/python3.5/site-packages/soundfile.py", line 1320, in _cdata_io
+    _error_check(self._errorcode)
+  File "/home/pi/.local/lib/python3.5/site-packages/soundfile.py", line 1355, in _error_check
+    raise RuntimeError(prefix + _ffi.string(err_str).decode('utf-8', 'replace'))
+RuntimeError: System error.
+couldn't find TLE_dir (/usr/local/etc/TLE). Defaulting to /usr/local/src/sat_station 
+couldn't find log_dir (/usr/local/src/sat_station). Defaulting to ./log 
+Traceback (most recent call last):
+  File "./satstation.py", line 362, in <module>
+    sys.exit(main())
+  File "./satstation.py", line 261, in main
+    fcd = FCDProPlus()
+  File "./satstation.py", line 40, in __init__
+    self.ver = self.get_fw_ver()
+  File "./satstation.py", line 58, in get_fw_ver
+    d.open_path(self.dev['path'])
+  File "hid.pyx", line 72, in hid.device.open_path
+OSError: open failed
+couldn't find TLE_dir (/usr/local/etc/TLE). Defaulting to /usr/local/src/sat_station 
+couldn't find log_dir (/usr/local/src/sat_station). Defaulting to ./log 
+Traceback (most recent call last):
+  File "./satstation.py", line 362, in <module>
+    sys.exit(main())
+  File "./satstation.py", line 261, in main
+    fcd = FCDProPlus()
+  File "./satstation.py", line 40, in __init__
+    self.ver = self.get_fw_ver()
+  File "./satstation.py", line 58, in get_fw_ver
+    d.open_path(self.dev['path'])
+  File "hid.pyx", line 72, in hid.device.open_path
+OSError: open failed
+Traceback (most recent call last):
+  File "./satstation.py", line 10, in <module>
+    import skyfield.api as sky
+ImportError: No module named skyfield.api
+Traceback (most recent call last):
+  File "./satstation.py", line 10, in <module>
+    import skyfield.api as sky
+ImportError: No module named skyfield.api
+couldn't find TLE_dir (/usr/local/etc/TLE). Defaulting to /usr/local/src/sat_station 
+couldn't find log_dir (/usr/local/src/sat_station). Defaulting to ./log 
+{'default_high_input_latency': 0.008, 'default_low_input_latency': 0.0016666666666666668, 'name': 'FUNcube Dongle V2.0: USB Audio (hw:1,0)', 'max_input_channels': 2, 'default_low_output_latency': -1.0, 'max_output_channels': 0, 'dev': 0, 'default_samplerate': 192000.0, 'hostapi': 0, 'default_high_output_latency': -1.0}
+svmem(total=1024184320, available=889520128, percent=13.1, used=75264000, free=796393472, active=101429248, inactive=93753344, buffers=17809408, cached=134717440, shared=6991872, slab=18907136)
+next pass is of NOAA 18 [B] starting at UTC 2019-03-04 22:50:46.416000+00:00 lasting 440 seconds
+next pass is of NOAA 9 [P] starting at UTC 2019-03-05 00:43:17.934000+00:00 lasting 670 seconds
+next pass is of NOAA 9 [P] starting at UTC 2019-03-05 02:23:00.334000+00:00 lasting 920 seconds
+next pass is of NOAA 9 [P] starting at UTC 2019-03-05 04:03:42.477000+00:00 lasting 900 seconds
+next pass is of NOAA 9 [P] starting at UTC 2019-03-05 05:44:24.757000+00:00 lasting 710 seconds

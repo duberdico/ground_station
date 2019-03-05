@@ -19,13 +19,11 @@ import pathlib
 import queue
 import matplotlib
 import psutil
-from multiprocessing import Process
-
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from scipy.io import wavfile
 
-#from guppy import hpy
+
 
 class FCDProPlus(object):
     # modified from https://github.com/bazuchan/ghpsdr3-fcdproplus-server/blob/master/fcdpp-server.py
@@ -108,12 +106,6 @@ def read_TLE(TLE_dir):
 def callback(indata, frames, time, status):
     q.put(indata.copy())
 
-def record (rec_file,fs,dev):
-    with sf.SoundFile(rec_file, mode='x', samplerate=int(fs), channels=2, subtype='PCM_16') as file:
-        with sd.InputStream(samplerate=int(fs), dtype='int16', channels=2, callback=callback, device=dev):
-            while 1:
-                file.write(q.get())
-
 def record_pass(sdev,pass_df,rec_file,fs, doppler_switch = False):
     logger = logging.getLogger(__name__)
     logger.info('recording pass of {0} starting @ {1}'.format(pass_df.iloc[0]['Satellite'],pass_df.iloc[0]['UTC_time']))
@@ -128,18 +120,19 @@ def record_pass(sdev,pass_df,rec_file,fs, doppler_switch = False):
     fcd.set_freq(pass_df.iloc[0]['f0'] )
     fcd.set_if_gain(True)
     # Make sure the file is opened before recording anything:
-    p = Process(target=record, args=(rec_file,int(fs),sdev['dev']))
-    p.start()
-    for i,r in pass_df.iterrows():
-         t = ts.now() 
-         while t.utc_datetime() < r['UTC_time']:
+    with sf.SoundFile(rec_file, mode='x', samplerate=int(fs), channels=2, subtype='PCM_16') as file:
+        with sd.InputStream(samplerate=int(fs), dtype=int16, device=0, channels=2, callback=callback):
+            for i,r in pass_df.iterrows():
                 t = ts.now() 
-         if doppler_switch:
-                fcd.set_freq(r['freq'] )
-                logger.info('doppler step at {0}: {1} Hz'.format(r['UTC_time'],r['freq']))
-    p.terminate()
+                while t.utc_datetime() < r['UTC_time']:
+                    fcd.set_freq(r['freq'])
+                    file.write(q.get())
+                    #fcd.set_freq(r['freq'])
+                    t = ts.now() 
+                if doppler_switch:
+                    #fcd.set_freq(r['freq'] )
+                    logger.info('doppler step at {0}: {1} Hz'.format(r['UTC_time'],r['freq']))
     logger.info('finished recording {0}'.format(rec_file))
-    q.queue.clear()
 
 def next_pass (config_json,verbose = False):
     c = 299792458 # speed of light m/s
@@ -249,7 +242,7 @@ def main():
         os.mkdir('./log')
 
     if not os.path.isdir('./report'):
-        os.mkdir('./report')
+   
     
     
     # check for FCDPro+
@@ -287,15 +280,10 @@ def main():
         
         ts = sky.load.timescale()
         logger.info(psutil.disk_usage('/'))
-        
-        print(psutil.virtual_memory())
         du = psutil.disk_usage('/')
-        
         while du[3] < 95 : # run while at least 5% of disk space available
-            config_json = read_config('config.json')             
             with q.mutex:
                 q.queue.clear()
-            logger.info(psutil.virtual_memory())
             pass_df = next_pass(config_json,verbose=verbose)
             sys.stderr.write('next pass is of {0} starting at UTC {1} lasting {2} seconds\n'.format(pass_df.iloc[0]['Satellite'],pass_df.iloc[0]['UTC_time'], (pass_df.iloc[-1]['UTC_time'] - pass_df.iloc[0]['UTC_time']).seconds))
             logger.info('next pass is of {0} starting at UTC {1} lasting {2} seconds'.format(pass_df.iloc[0]['Satellite'],pass_df.iloc[0]['UTC_time'], (pass_df.iloc[-1]['UTC_time'] - pass_df.iloc[0]['UTC_time']).seconds))
@@ -303,60 +291,11 @@ def main():
             rec_file = os.path.join(config_json['Recording_dir'],filename + '.wav')
             fig_file = os.path.join(config_json['Recording_dir'],filename + '.png')
             csv_file = os.path.join(config_json['Recording_dir'],filename + '.csv')
-            # wait until next pass
-            t = ts.now().utc_datetime()
-            # wait until defined time
-            logger.info('waiting until {0}'.format(pass_df.iloc[0]['UTC_time']))
-            st = pass_df.iloc[0]['UTC_time']
-            while t  < st:
-                t = ts.now().utc_datetime()
+                       
+            record_pass(dongle_sdev(rec_file,192e3)
 
-            logger.info('starting recording at {0}'.format(ts.now().utc_datetime()))
-            # record pass
-           
-            record_pass(dongle_sdev,pass_df,rec_file,192e3, doppler_switch= doppler)
-
-             # plot
-            plt.figure()
-            ax = plt.subplot(122, projection='polar' )
-            plt.plot(pass_df['Azimuth_degrees']*np.pi/180, 90-pass_df['Altitude_degrees'],'b-')
-            ax.set_ylim(bottom = 0,top = 90)
-            ax.set_theta_zero_location("N")
-            ax.set_theta_direction(-1)
-            ax.set_yticklabels([])
-            plt.title(pass_df.iloc[0]['Satellite'])
-            ax = plt.subplot(121 )
-            ax.plot_date(pass_df['UTC_time'], pass_df['freq'] *1e-6,'b-')
-            plt.xticks(rotation='vertical')
-            plt.ylabel('Freq [MHz]')
-            ax.grid()
-            plt.savefig(fig_file)
-            # save last recorded pass data to csv
-            pass_df.to_csv(csv_file)
-            del(pass_df)
-            du = psutil.disk_usage('/')
             
 if __name__ == '__main__':
 
     q = queue.Queue()
-    
-    verbose = False
-    doppler = True
-
-    parser = argparse.ArgumentParser(description='Process some integers.')
-    parser.add_argument('--log_dir', metavar='N', type=str, help='logging directory')
-    parser.add_argument('--rec_dir', metavar='N', type=str, help='recording directory')
-    parser.add_argument("-v","--verbose", help="increase output verbosity",action="store_true")
-    parser.add_argument("-d","--doppler", help="correct for doppler shift")
-    
-    args = parser.parse_args()
-
-    if args.verbose:
-        verbose = True
-    
-    
-    log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    logging.basicConfig(level=logging.INFO, format=log_fmt, filename = 'groundstation.log')
-   
-
     sys.exit(main())
