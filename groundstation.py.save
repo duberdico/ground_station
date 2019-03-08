@@ -214,22 +214,31 @@ def main():
     logger.info('running in directory {0}'.format(project_dir))
 
     config_json = read_config('config.json') 
-
     if 'TLE_dir' in config_json.keys():
         if os.path.isdir(config_json['TLE_dir']):
-            print("could not find TLE_dir ({0}). Defaulting to {1} ".format(config_json['TLE_dir'],project_dir))
-            logger.warning("could not find TLE_dir ({0}). Defaulting to {1} ".format(config_json['TLE_dir'],project_dir))
+            print("couldn't find TLE_dir ({0}). Defaulting to {1} ".format(config_json['TLE_dir'],project_dir))
+            logger.warning("couldn't find TLE_dir ({0}). Defaulting to {1} ".format(config_json['TLE_dir'],project_dir))
             config_json['TLE_dir'] = str(project_dir)
     else:
         config_json['TLE_dir'] = str(project_dir)
 
+
+    if 'log_dir' in config_json.keys():
+        if os.path.isdir(config_json['log_dir']):
+            print("couldn't find log_dir ({0}). Defaulting to {1} ".format(config_json['TLE_dir'],'./log'))
+            logger.warning("couldn't find TLE_dir ({0}). Defaulting to {1} ".format(config_json['TLE_dir'],'./log'))
+            config_json['log_dir'] = './log'
+    else:
+        config_json['log_dir'] = './log'
+
+
     if 'log_dir' in config_json.keys():
          if os.path.isdir(config_json['log_dir']):
-            logging.basicConfig(level=logging.INFO, format=log_fmt, filename = 'satstation.log')
+            #logging.basicConfig(level=logging.INFO, format=log_fmt, filename = 'satstation.log')
             pass
          else:
-            print("couldn't find log_dir ({0}). Defaulting to {1} ".format(config_json['log_dir'],'./log'))
-            logger.warning("couldn't find log_dir ({0}). Defaulting to {1} ".format(config_json['log_dir'],'./log'))
+            print("couldn't find log_dir ({0}). Defaulting to {1} ".format(config_json['TLE_dir'],'./log'))
+            logger.warning("couldn't find TLE_dir ({0}). Defaulting to {1} ".format(config_json['TLE_dir'],'./log'))
             config_json['log_dir'] = './log'
     else:
         config_json['log_dir'] = './log'
@@ -303,7 +312,7 @@ def main():
                 t = ts.now().utc_datetime()
 
             logger.info('starting recording at {0}'.format(ts.now().utc_datetime()))
-            usb_dev = finddev(idVendor=0x04d8, idProduct=0xfb31)
+            usb_dev = finddev(idVendor=0x04d8, idProduct=0xfb31)            
             usb_dev.reset()
 
             # record pass
