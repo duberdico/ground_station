@@ -19,6 +19,7 @@ import matplotlib.pyplot as plt
 def read_TLE(TLE_dir):
     logger = logging.getLogger(__name__)
     logger.info('reading TLE data from {0} UTC'.format(TLE_dir))
+    satellites = {}
     if os.path.isdir(TLE_dir): 
         satellites = {} 
         files = os.listdir(TLE_dir) 
@@ -196,7 +197,7 @@ def main():
 
 
             # record pass
-            record_pass(dongle_sdev,pass_df,rec_file,192e3)
+            record_pass(pass_df,rec_file,192e3)
 
              # plot
             plt.figure()
