@@ -8,9 +8,6 @@ import skyfield.api as sky
 import pandas as pd 
 import json 
 import numpy as np
-import wave
-import sounddevice as sd
-import soundfile as sf
 import pathlib
 import matplotlib
 import psutil
@@ -222,8 +219,6 @@ def main():
             du = psutil.disk_usage('/')
             
 if __name__ == '__main__':
-
-    q = queue.Queue()
     
     verbose = False
     doppler = True
