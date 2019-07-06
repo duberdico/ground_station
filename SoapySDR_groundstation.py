@@ -43,8 +43,10 @@ def record_pass(pass_df,rec_file,fs):
                    '-f', str(freq),
                    '-g', '50',
                    '-s',str(fs),
-                   '-n',str(int(duration * fs))
+                   '-n',str(int(duration * fs)),
+                   rec_file
                    ]
+    logger.info(command_str)
     sdr_output = subprocess.Popen([command_str],
                                   stdout=subprocess.PIPE,
                                   stderr=subprocess.STDOUT)
@@ -148,7 +150,7 @@ def main():
         logger.error('Did not find rx_sdr !')
         sys.exit()
 
-    config_json = read_config('config.json') 
+    config_json = read_config('config.json')
 
     if 'TLE_dir' in config_json.keys():
         if os.path.isdir(config_json['TLE_dir']):
