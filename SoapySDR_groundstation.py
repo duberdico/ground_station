@@ -47,7 +47,7 @@ def record_pass(pass_df,rec_file,fs):
                    rec_file
                    ]
     logger.info(command_str)
-    sdr_output = subprocess.Popen([command_str],
+    sdr_output = subprocess.Popen(command_str,
                                   stdout=subprocess.PIPE,
                                   stderr=subprocess.STDOUT)
     sdr_output.wait(timeout=duration + 10)
