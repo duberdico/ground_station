@@ -37,7 +37,7 @@ def record_pass(duration,rec_file,freq,fs):
                    rec_file
                    ]
     logger.info(' '.join(command_str))
-    sdr_output = subprocess.Popen(' '.join(command_str),
+    sdr_output = subprocess.Popen(command_str,
                                   stdout=subprocess.PIPE,
                                   stderr=subprocess.STDOUT)
     sdr_output.wait(timeout=duration + 10)
@@ -149,7 +149,7 @@ def main():
             logger.warning("could not find TLE_dir ({0}). Defaulting to {1} ".format(config_json['TLE_dir'],project_dir))
             config_json['TLE_dir'] = str(project_dir)
     else:
-        logger.info("TLE_dir not found in configuration. Defaulting to {}".format(project_dir)))
+        logger.info("TLE_dir not found in configuration. Defaulting to {}".format(project_dir))
         config_json['TLE_dir'] = str(project_dir)
 
     if 'log_dir' in config_json.keys():
@@ -170,12 +170,12 @@ def main():
 
     if config_json:
         ts = sky.load.timescale()
-        logger.info(psutil.disk_usage('/').replace(', ',',\n'))
+        logger.info(str(psutil.disk_usage('/')).replace(', ',',\n'))
         du = psutil.disk_usage('/')
         
         while du[3] < 95 : # run while at least 5% of disk space available
             config_json = read_config('config.json')
-            logger.info(psutil.virtual_memory().replace(', ',',\n'))
+            logger.info(str(psutil.virtual_memory()).replace(', ',',\n'))
             pass_df = next_pass(config_json,verbose=verbose)
             sys.stderr.write('next pass is of {0} starting at UTC {1} lasting {2} seconds\n'.format(pass_df.iloc[0]['Satellite'],pass_df.iloc[0]['UTC_time'], (pass_df.iloc[-1]['UTC_time'] - pass_df.iloc[0]['UTC_time']).seconds))
             logger.info('next pass is of {0} starting at UTC {1} lasting {2} seconds'.format(pass_df.iloc[0]['Satellite'],pass_df.iloc[0]['UTC_time'], (pass_df.iloc[-1]['UTC_time'] - pass_df.iloc[0]['UTC_time']).seconds))
