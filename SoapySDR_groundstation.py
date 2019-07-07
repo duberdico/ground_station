@@ -154,13 +154,19 @@ def main():
 
     if 'log_dir' in config_json.keys():
          if os.path.isdir(config_json['log_dir']):
-            logging.basicConfig(level=logging.INFO, format=log_fmt, filename = 'satstation.log')
+             logfilename = os.path.join(config_json['log_dir'], 'groundstation.log')
          else:
             print("couldn't find log_dir ({0}). Defaulting to {1} ".format(config_json['log_dir'],'./log'))
             logger.warning("couldn't find log_dir ({0}). Defaulting to {1} ".format(config_json['log_dir'],'./log'))
             config_json['log_dir'] = './log'
+            logfilename = os.path.join('.','log', 'groundstation.log')
     else:
         config_json['log_dir'] = './log'
+        logfilename = os.path.join('.', 'log', 'groundstation.log')
+
+    logging.basicConfig(level=logging.INFO,
+                        format=log_fmt,
+                        filename=logfilename)
 
     if config_json:
         ts = sky.load.timescale()
