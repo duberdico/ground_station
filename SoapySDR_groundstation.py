@@ -144,17 +144,17 @@ def main():
 
     if 'TLE_dir' in config_json.keys():
         logger.info("looking for TLE_dir ({0})".format(config_json['TLE_dir'])
-        if os.path.isdir(config_json['TLE_dir']):
+        if not os.path.isdir(config_json['TLE_dir']):
             print("could not find TLE_dir ({0}). Defaulting to {1} ".format(config_json['TLE_dir'],project_dir))
             logger.warning("could not find TLE_dir ({0}). Defaulting to {1} ".format(config_json['TLE_dir'],project_dir))
             config_json['TLE_dir'] = str(project_dir)
     else:
+        logger.info("TLE_dir not found in configuration. Defaulting to {}".format(project_dir)))
         config_json['TLE_dir'] = str(project_dir)
 
     if 'log_dir' in config_json.keys():
          if os.path.isdir(config_json['log_dir']):
             logging.basicConfig(level=logging.INFO, format=log_fmt, filename = 'satstation.log')
-            pass
          else:
             print("couldn't find log_dir ({0}). Defaulting to {1} ".format(config_json['log_dir'],'./log'))
             logger.warning("couldn't find log_dir ({0}). Defaulting to {1} ".format(config_json['log_dir'],'./log'))
@@ -163,19 +163,18 @@ def main():
         config_json['log_dir'] = './log'
 
     if config_json:
-
         ts = sky.load.timescale()
-        logger.info(psutil.disk_usage('/'))
+        logger.info(psutil.disk_usage('/').replace(', ',',\n'))
         du = psutil.disk_usage('/')
         
         while du[3] < 95 : # run while at least 5% of disk space available
             config_json = read_config('config.json')
-            logger.info(psutil.virtual_memory())
+            logger.info(psutil.virtual_memory().replace(', ',',\n'))
             pass_df = next_pass(config_json,verbose=verbose)
             sys.stderr.write('next pass is of {0} starting at UTC {1} lasting {2} seconds\n'.format(pass_df.iloc[0]['Satellite'],pass_df.iloc[0]['UTC_time'], (pass_df.iloc[-1]['UTC_time'] - pass_df.iloc[0]['UTC_time']).seconds))
             logger.info('next pass is of {0} starting at UTC {1} lasting {2} seconds'.format(pass_df.iloc[0]['Satellite'],pass_df.iloc[0]['UTC_time'], (pass_df.iloc[-1]['UTC_time'] - pass_df.iloc[0]['UTC_time']).seconds))
             filename = pass_df.iloc[0]['Satellite'].split('[')[0].replace(' ','_') +  ts.now().utc_datetime().strftime("%Y%m%d_%H%M%S")
-            rec_file = os.path.join(config_json['Recording_dir'],filename + '.wav')
+            rec_file = os.path.join(config_json['Recording_dir'],filename + '.iq')
             fig_file = os.path.join(config_json['Recording_dir'],filename + '.png')
             csv_file = os.path.join(config_json['Recording_dir'],filename + '.csv')
             # wait until next pass
@@ -186,12 +185,11 @@ def main():
             while t  < st:
                 t = ts.now().utc_datetime()
 
-            logger.info('starting recording at {0}'.format(ts.now().utc_datetime()))
-
-
-            # record pass
             freq = pass_df.iloc[0]['f0']
             duration = (pass_df.iloc[-1]['UTC_time'] - pass_df.iloc[0]['UTC_time']).seconds
+            logger.info('starting recording at {0}'.format(ts.now().utc_datetime()))
+
+            # record pass
             record_pass(duration,rec_file,freq, 192e3)
 
              # plot
