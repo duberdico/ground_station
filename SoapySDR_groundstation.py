@@ -37,7 +37,7 @@ def record_pass(duration,rec_file,freq,fs):
                    rec_file
                    ]
     logger.info(' '.join(command_str))
-    sdr_output = subprocess.Popen(command_str,
+    sdr_output = subprocess.Popen(' '.join(command_str),
                                   stdout=subprocess.PIPE,
                                   stderr=subprocess.STDOUT)
     sdr_output.wait(timeout=duration + 10)
@@ -143,7 +143,7 @@ def main():
     config_json = read_config('config.json')
 
     if 'TLE_dir' in config_json.keys():
-        logger.info("looking for TLE_dir ({0})".format(config_json['TLE_dir'])
+        logger.info("looking for TLE_dir ({0})".format(config_json['TLE_dir']))
         if not os.path.isdir(config_json['TLE_dir']):
             print("could not find TLE_dir ({0}). Defaulting to {1} ".format(config_json['TLE_dir'],project_dir))
             logger.warning("could not find TLE_dir ({0}). Defaulting to {1} ".format(config_json['TLE_dir'],project_dir))
