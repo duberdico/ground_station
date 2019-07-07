@@ -36,7 +36,7 @@ def record_pass(duration,rec_file,freq,fs):
                    '-n',str(int(duration * fs)),
                    rec_file
                    ]
-    logger.info(command_str)
+    logger.info(' '.join(command_str))
     sdr_output = subprocess.Popen(command_str,
                                   stdout=subprocess.PIPE,
                                   stderr=subprocess.STDOUT)
