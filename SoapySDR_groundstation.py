@@ -153,6 +153,7 @@ def main():
     config_json = read_config('config.json')
 
     if 'TLE_dir' in config_json.keys():
+        logger.info("looking for TLE_dir ({0})".format(config_json['TLE_dir'])
         if os.path.isdir(config_json['TLE_dir']):
             print("could not find TLE_dir ({0}). Defaulting to {1} ".format(config_json['TLE_dir'],project_dir))
             logger.warning("could not find TLE_dir ({0}). Defaulting to {1} ".format(config_json['TLE_dir'],project_dir))
