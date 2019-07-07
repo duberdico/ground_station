@@ -29,7 +29,7 @@ def read_TLE(TLE_dir):
 
 def record_pass(duration,rec_file,freq,fs):
     logger = logging.getLogger(__name__)
-    logger.info(f"starting recording of {rec_file} on {freq * 1e-3}kHz for {duration} seconds")
+    logger.info('starting recording of {} on {}kHz for {} seconds'.format(rec_file,freq*1e-3,duration))
     command_str = ['rx_sdr',
                    '-f', str(freq),
                    '-g', '50',
