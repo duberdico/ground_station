@@ -38,13 +38,12 @@ def record_pass(duration,rec_file,freq,fs):
                    rec_file
                    ]
     logger.info(' '.join(command_str))
-    sdr_output = subprocess.Popen(command_str,
-                                  stdout=subprocess.PIPE,
-                                  stderr=subprocess.STDOUT)
-    sdr_output.wait(timeout=duration + 10)
-    stdout, stderr = sdr_output.communicate()
-    logger.info(stdout)
-    logger.error(stderr)
+    sdr_output = subprocess.check_output(command_str)
+    print(sdr_output)
+    #sdr_output.wait(timeout=duration + 10)
+    #stdout, stderr = sdr_output.communicate()
+    logger.info(sdr_output)
+    #logger.error(stderr)
 
 
 
