@@ -33,6 +33,7 @@ def record_pass(duration,rec_file,freq,fs):
     command_str = ['rx_sdr',
                    '-f', str(freq),
                    '-g', '50',
+                   '-F', 'CF32'
                    '-s',str(fs),
                    '-n',str(int(duration * fs)),
                    rec_file
