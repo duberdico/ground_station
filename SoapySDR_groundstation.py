@@ -1,4 +1,3 @@
-
 import os
 import sys
 import argparse
@@ -28,17 +27,8 @@ def read_TLE(TLE_dir):
                 satellites.update(sky.load.tle(os.path.join(TLE_dir,file))) 
     return satellites
 
-def record_pass(pass_df,rec_file,fs):
+def record_pass(duration,rec_file,freq,fs):
     logger = logging.getLogger(__name__)
-    logger.info('recording pass of {0} starting @ {1}'.format(pass_df.iloc[0]['Satellite'],pass_df.iloc[0]['UTC_time']))
-    pass_duration = pass_df.iloc[-1]['UTC_time'] - pass_df.iloc[0]['UTC_time']
-    duration = pass_duration.seconds
-    logger.info('satellite pass duration: {0} seconds'.format(duration))
-    logger.info('maximum elevation: {0} degrees'.format(pass_df['Altitude_degrees'].max()))
-    logger.info('f0: {0} kHz'.format(1e-3* pass_df.iloc[0]['f0']))
-    ts = sky.load.timescale()
-
-    freq = 137770000
     command_str = ['rx_sdr',
                    '-f', str(freq),
                    '-g', '50',
@@ -53,7 +43,7 @@ def record_pass(pass_df,rec_file,fs):
     sdr_output.wait(timeout=duration + 10)
     stdout, stderr = sdr_output.communicate()
     logger.info(stdout)
-    #logger.info(stderr)
+    logger.error(stderr)
 
 
 
@@ -200,7 +190,9 @@ def main():
 
 
             # record pass
-            record_pass(pass_df,rec_file,192e3)
+            freq = pass_df.iloc[0]['f0']
+            duration = (pass_df.iloc[-1]['UTC_time'] - pass_df.iloc[0]['UTC_time']).seconds
+            record_pass(duration,rec_file,freq, 192e3)
 
              # plot
             plt.figure()
