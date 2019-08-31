@@ -9,7 +9,7 @@ import pandas as pd
 import json 
 import numpy as np
 import wave
-import sounddevice as sd
+
 import soundfile as sf
 import pathlib
 import matplotlib
@@ -22,11 +22,13 @@ import matplotlib.pyplot as plt
 def read_TLE(TLE_dir):
     logger = logging.getLogger(__name__)
     logger.info('reading TLE data from {0} UTC'.format(TLE_dir))
+    satellites = {}
+
     if os.path.isdir(TLE_dir): 
-        satellites = {} 
+
         files = os.listdir(TLE_dir) 
         for file in files: 
-            if file.endswith(".txt"): 
+            if file.endswith(".txt"):
                 satellites.update(sky.load.tle(os.path.join(TLE_dir,file))) 
     return satellites
 
@@ -60,57 +62,60 @@ def record_pass(pass_df,rec_file,fs):
 def next_pass (config_json,verbose = False):
     c = 299792458 # speed of light m/s
     logger = logging.getLogger(__name__)
-    TLEs = read_TLE(config_json['TLE_dir']) 
-    station = sky.Topos(config_json['Location']['Latitude'], config_json['Location']['Longitude']) 
-    satellites = config_json["Satellites"]
-    ts = sky.load.timescale() 
-    t = ts.now() 
-    logger.info('now time is {0} UTC'.format(t.utc_datetime()))
-    d = ts.utc(t.utc[0], t.utc[1], t.utc[2]+1) - t
-    step_seconds = 10
-    T = ts.tt_jd(t.tt + np.array(range(0,round(86400/step_seconds))).astype(np.float) * (step_seconds/86400) )
-    last_duration = 0
-    last_start_time =  ts.tt_jd(t.tt + 10)
-    cur_df = pd.DataFrame()
-    for satellite in satellites: 
-        if satellite['Name'] in TLEs.keys(): 
-            if verbose:
-                print('looking for {0} passes'.format(satellite['Name']))
-            logger.info('looking for {0} passes'.format(satellite['Name']))
-            freq = (satellite['Frequency_kHz'] * 1e3)
-            geocentric = TLEs[satellite['Name']].at(T)
-            subpoint = geocentric.subpoint()
-            loc_difference = TLEs[satellite['Name']] - station
-            topocentric = loc_difference.at(T)
-            alt, az, distance = topocentric.altaz()
-            # separate periods
-            j = (alt.degrees >= 0) * 1
-            k = j[1:] - j[0:-1]
-            s = np.argwhere(k == 1).reshape(-1)
-            e = np.argwhere(k == -1).reshape(-1)
-            for si in s:
-                h = e[e>si].reshape(-1).min()
-                if h > 0:
-                    if (alt.degrees[si:h] >= config_json["Altitude_threshold_degrees"]).any():
-                        cur_duration = T[h] - T[si]
-                        if last_start_time  - T[si] > 0:
-                            last_duration =  cur_duration
-                            last_start_time = T[si]
-                            cur_df = pd.DataFrame(data=None)
-                            delta_t = np.diff(T[si-1:h]) * 86400 # seconds
-                            cur_df['Azimuth_degrees'] = az.degrees[si:h]
-                            cur_df['Distance_km'] = distance.km[si:h]
-                            cur_df['Altitude_degrees'] = alt.degrees[si:h]
-                            cur_df['Latitude'] = subpoint.latitude.degrees[si:h]
-                            cur_df['Longitude'] = subpoint.longitude.degrees[si:h]
-                            cur_df['UTC_time'] = T.utc_datetime()[si:h]
-                            delta_distance_meter = np.diff(distance.km[si-1:h]) * 1e3
-                            range_rate = delta_distance_meter / delta_t
-                            cur_df['doppler_shift'] =  (1-(range_rate / c)).astype(np.float)
-                            cur_df['f0'] =  np.round(freq)
-                            cur_df['freq'] =  np.round( freq * cur_df['doppler_shift'])
-                            cur_df['Satellite'] = satellite['Name']
-                            break
+    TLEs = read_TLE(config_json['TLE_dir'])
+    if len(TLE) > 0:
+        station = sky.Topos(config_json['Location']['Latitude'], config_json['Location']['Longitude'])
+        satellites = config_json["Satellites"]
+        ts = sky.load.timescale()
+        t = ts.now()
+        logger.info('now time is {0} UTC'.format(t.utc_datetime()))
+        d = ts.utc(t.utc[0], t.utc[1], t.utc[2]+1) - t
+        step_seconds = 10
+        T = ts.tt_jd(t.tt + np.array(range(0,round(86400/step_seconds))).astype(np.float) * (step_seconds/86400) )
+        last_duration = 0
+        last_start_time =  ts.tt_jd(t.tt + 10)
+        cur_df = pd.DataFrame()
+        for satellite in satellites:
+            if satellite['Name'] in TLEs.keys():
+                if verbose:
+                    print('looking for {0} passes'.format(satellite['Name']))
+                logger.info('looking for {0} passes'.format(satellite['Name']))
+                freq = (satellite['Frequency_kHz'] * 1e3)
+                geocentric = TLEs[satellite['Name']].at(T)
+                subpoint = geocentric.subpoint()
+                loc_difference = TLEs[satellite['Name']] - station
+                topocentric = loc_difference.at(T)
+                alt, az, distance = topocentric.altaz()
+                # separate periods
+                j = (alt.degrees >= 0) * 1
+                k = j[1:] - j[0:-1]
+                s = np.argwhere(k == 1).reshape(-1)
+                e = np.argwhere(k == -1).reshape(-1)
+                for si in s:
+                    h = e[e>si].reshape(-1).min()
+                    if h > 0:
+                        if (alt.degrees[si:h] >= config_json["Altitude_threshold_degrees"]).any():
+                            cur_duration = T[h] - T[si]
+                            if last_start_time  - T[si] > 0:
+                                last_duration =  cur_duration
+                                last_start_time = T[si]
+                                cur_df = pd.DataFrame(data=None)
+                                delta_t = np.diff(T[si-1:h]) * 86400 # seconds
+                                cur_df['Azimuth_degrees'] = az.degrees[si:h]
+                                cur_df['Distance_km'] = distance.km[si:h]
+                                cur_df['Altitude_degrees'] = alt.degrees[si:h]
+                                cur_df['Latitude'] = subpoint.latitude.degrees[si:h]
+                                cur_df['Longitude'] = subpoint.longitude.degrees[si:h]
+                                cur_df['UTC_time'] = T.utc_datetime()[si:h]
+                                delta_distance_meter = np.diff(distance.km[si-1:h]) * 1e3
+                                range_rate = delta_distance_meter / delta_t
+                                cur_df['doppler_shift'] =  (1-(range_rate / c)).astype(np.float)
+                                cur_df['f0'] =  np.round(freq)
+                                cur_df['freq'] =  np.round( freq * cur_df['doppler_shift'])
+                                cur_df['Satellite'] = satellite['Name']
+                                break
+    else:
+        error()
     return cur_df
 
 
@@ -153,7 +158,7 @@ def main():
     config_json = read_config('config.json') 
 
     if 'TLE_dir' in config_json.keys():
-        if os.path.isdir(config_json['TLE_dir']):
+        if not os.path.isdir(config_json['TLE_dir']):
             print("could not find TLE_dir ({0}). Defaulting to {1} ".format(config_json['TLE_dir'],project_dir))
             logger.warning("could not find TLE_dir ({0}). Defaulting to {1} ".format(config_json['TLE_dir'],project_dir))
             config_json['TLE_dir'] = str(project_dir)
@@ -165,7 +170,7 @@ def main():
             logging.basicConfig(level=logging.INFO, format=log_fmt, filename = 'satstation.log')
             pass
          else:
-            print("couldn't find log_dir ({0}). Defaulting to {1} ".format(config_json['log_dir'],'./log'))
+            print("could not find log_dir ({0}). Defaulting to {1} ".format(config_json['log_dir'],'./log'))
             logger.warning("couldn't find log_dir ({0}). Defaulting to {1} ".format(config_json['log_dir'],'./log'))
             config_json['log_dir'] = './log'
     else:
@@ -223,7 +228,7 @@ def main():
             
 if __name__ == '__main__':
 
-    q = queue.Queue()
+    #q = queue.Queue()
     
     verbose = False
     doppler = True

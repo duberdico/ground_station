@@ -27,25 +27,23 @@ def read_TLE(TLE_dir):
                 satellites.update(sky.load.tle(os.path.join(TLE_dir,file))) 
     return satellites
 
-def record_pass(duration,rec_file,freq,fs):
+
+def rx_sdr_cmd(freq = 137000000, fs = 2000000, duration = 10, rec_file = 'test_file.iq'):
     logger = logging.getLogger(__name__)
-    logger.info('starting recording of {} on {}kHz for {} seconds'.format(rec_file,freq*1e-3,duration))
+    logger.info('starting recording of {} on {}kHz for {} seconds'.format(rec_file, freq * 1e-3, duration))
+    if rec_file == "":
+        cur_time_str = time.strftime("%Y%m%d%H%M%S", time.localtime())
+        rec_file = f"{cur_time_str}_{freq}_{fs}_{duration}.raw"
     command_str = ['rx_sdr',
-                   '-f', str(freq),
+                   '-f', str(int(freq)),
                    '-g', '50',
-                   '-F', 'CF32'
-                   '-s',str(fs),
-                   '-n',str(int(duration * fs)),
+                   '-F', 'CF16' 
+                   '-s', str(int(fs)),
+                   '-n', str(int(duration * fs)),
                    rec_file
                    ]
-    logger.info(' '.join(command_str))
-    sdr_output = subprocess.check_output(command_str)
-    print(sdr_output)
-    #sdr_output.wait(timeout=duration + 10)
-    #stdout, stderr = sdr_output.communicate()
-    logger.info(sdr_output)
-    #logger.error(stderr)
-
+    sdr_output = subprocess.run(command_str)
+    return sdr_output
 
 
 def next_pass (config_json,verbose = False):
@@ -197,7 +195,8 @@ def main():
             logger.info('starting recording at {0}'.format(ts.now().utc_datetime()))
 
             # record pass
-            record_pass(duration,rec_file,freq, 192e3)
+            #record_pass(duration,rec_file,freq, 192e3)
+            rx_sdr_cmd(freq, fs = 192e3, duration = duration, rec_file = rec_file)
 
              # plot
             plt.figure()
