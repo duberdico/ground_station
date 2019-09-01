@@ -188,7 +188,7 @@ def main():
             logger.info('waiting until {0} UTC'.format(pass_df.iloc[0]['UTC_time']))
             st = pass_df.iloc[0]['UTC_time']
             #while t  < st:
-            while False
+            while False:
                 t = ts.now().utc_datetime()
 
             freq = pass_df.iloc[0]['f0']
