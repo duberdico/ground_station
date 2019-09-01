@@ -179,15 +179,16 @@ def main():
             sys.stderr.write('next pass is of {0} starting at UTC {1} lasting {2} seconds\n'.format(pass_df.iloc[0]['Satellite'],pass_df.iloc[0]['UTC_time'], (pass_df.iloc[-1]['UTC_time'] - pass_df.iloc[0]['UTC_time']).seconds))
             logger.info('next pass is of {0} starting at UTC {1} lasting {2} seconds'.format(pass_df.iloc[0]['Satellite'],pass_df.iloc[0]['UTC_time'], (pass_df.iloc[-1]['UTC_time'] - pass_df.iloc[0]['UTC_time']).seconds))
             filename = pass_df.iloc[0]['Satellite'].split('[')[0].replace(' ','_') +  ts.now().utc_datetime().strftime("%Y%m%d_%H%M%S")
-            rec_file = os.path.join(config_json['Recording_dir'],filename + '.iq')
+            rec_file = os.path.join(config_json['Recording_dir'],filename + '.raw')
             fig_file = os.path.join(config_json['Recording_dir'],filename + '.png')
             csv_file = os.path.join(config_json['Recording_dir'],filename + '.csv')
             # wait until next pass
             t = ts.now().utc_datetime()
             # wait until defined time
-            logger.info('waiting until {0}'.format(pass_df.iloc[0]['UTC_time']))
+            logger.info('waiting until {0} UTC'.format(pass_df.iloc[0]['UTC_time']))
             st = pass_df.iloc[0]['UTC_time']
-            while t  < st:
+            #while t  < st:
+            while False
                 t = ts.now().utc_datetime()
 
             freq = pass_df.iloc[0]['f0']
