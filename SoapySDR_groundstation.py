@@ -37,7 +37,7 @@ def rx_sdr_cmd(freq = 137000000, fs = 2000000, duration = 10, rec_file = 'test_f
     command_str = ['rx_sdr',
                    '-f', str(int(freq)),
                    '-g', '50',
-                   '-F', 'CF16' 
+                   '-F', 'CF16',
                    '-s', str(int(fs)),
                    '-n', str(int(duration * fs)),
                    rec_file
