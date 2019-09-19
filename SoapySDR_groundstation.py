@@ -311,7 +311,7 @@ def main():
                 " ", "_"
             ) + ts.now().utc_datetime().strftime("%Y%m%d_%H%M%S")
 
-            rec_file = os.path.join(config_json["Recording_dir"], filename + f'_{freq}Hz_.{config_json["output_format"]}')
+            rec_file = os.path.join(config_json["Recording_dir"], filename + f'_{freq}Hz.{config_json["output_format"]}')
             fig_file = os.path.join(config_json["Recording_dir"], filename + ".png")
             csv_file = os.path.join(config_json["Recording_dir"], filename + ".csv")
 
