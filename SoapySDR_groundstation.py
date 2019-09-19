@@ -317,7 +317,7 @@ def main():
 
             # record pass
             logger.info("starting recording at {0}".format(ts.now().utc_datetime()))
-            logger.info((f'recording {duration * fs} samples at {fs} Hz sample rate. Tunning to {freq} Hz')
+            logger.info(f'recording {duration * fs} samples at {fs} Hz sample rate. Tunning to {freq} Hz')
 
             rx_sdr_cmd(cfg = rec_cfg, filename=rec_file)
 
