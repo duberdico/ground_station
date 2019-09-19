@@ -250,13 +250,14 @@ def main():
     logging.basicConfig(level=logging.INFO, format=log_fmt, filename=logfilename)
 
     if config_json:
-        if config_json["State"] == "run":
-            ts = sky.load.timescale()
-            logger.info(str(psutil.disk_usage("/")).replace(", ", ",\n"))
-            du = psutil.disk_usage("/")
 
-            while du[3] < 95:  # run while at least 5% of disk space available
-                config_json = read_config("config.json")
+        ts = sky.load.timescale()
+        logger.info(str(psutil.disk_usage("/")).replace(", ", ",\n"))
+        du = psutil.disk_usage("/")
+
+        while du[3] < 95:  # run while at least 5% of disk space available
+            config_json = read_config("config.json")
+            if config_json["State"] == "run":
                 logger.info(str(psutil.virtual_memory()).replace(", ", ",\n"))
                 pass_df = next_pass(config_json, verbose=verbose)
                 sys.stderr.write(
@@ -334,6 +335,10 @@ def main():
                 rx_sdr_cmd(cfg=rec_cfg, filename=rec_file)
 
                 # TODO: check output file exist and is correct size and log result
+                if os.path.isfile(rec_file):
+                    logger.info(f"result file({rec_file}) is {os.path.getsize(rec_file)} bytes")
+                else:
+                    logger.info(f"couldn't find recording file {rec_file}!")
 
                 # plot
                 plt.figure()
