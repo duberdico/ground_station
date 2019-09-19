@@ -275,12 +275,8 @@ def main():
                     ).seconds,
                 )
             )
-            filename = pass_df.iloc[0]["Satellite"].split("[")[0].replace(
-                " ", "_"
-            ) + ts.now().utc_datetime().strftime("%Y%m%d_%H%M%S") + "CS16"
-            rec_file = os.path.join(config_json["Recording_dir"], filename + ".raw")
-            fig_file = os.path.join(config_json["Recording_dir"], filename + ".png")
-            csv_file = os.path.join(config_json["Recording_dir"], filename + ".csv")
+
+
             # wait until next pass
             t = ts.now().utc_datetime()
             # wait until defined time
@@ -289,28 +285,43 @@ def main():
             while t  < st:
                 t = ts.now().utc_datetime()
 
-            freq = pass_df.iloc[0]["f0"]
+            freq = int(pass_df.iloc[0]["f0"])
             duration = (
                 pass_df.iloc[-1]["UTC_time"] - pass_df.iloc[0]["UTC_time"]
             ).seconds
             fs = int(config_json["sample_rate"])
+
             rec_cfg = {
-                "freq": 137e6,
+                "freq": freq,
                 "gain": 0,
                 "fs": fs,
                 "F": "CS16",
                 "nsamples": duration * fs}
 
+
             if "dev_driver" in config_json.keys():
                 rec_cfg["dev"] = config_json["dev_driver"]
 
+            if "output_format" not in config_json.keys():
+                config_json["output_format"] = "CS16"
+
+            rec_cfg["dev"] = config_json["output_format"]
+
+            filename = pass_df.iloc[0]["Satellite"].split("[")[0].replace(
+                " ", "_"
+            ) + ts.now().utc_datetime().strftime("%Y%m%d_%H%M%S")
+
+            rec_file = os.path.join(config_json["Recording_dir"], filename + f'_{freq}Hz_.{config_json["dev_driver"]}')
+            fig_file = os.path.join(config_json["Recording_dir"], filename + ".png")
+            csv_file = os.path.join(config_json["Recording_dir"], filename + ".csv")
+
             # record pass
             logger.info("starting recording at {0}".format(ts.now().utc_datetime()))
-            print(f'recording {duration * fs} samples at {fs} Hz sample rate. Tunning to {freq} Hz')
+            logger.info((f'recording {duration * fs} samples at {fs} Hz sample rate. Tunning to {freq} Hz')
 
             rx_sdr_cmd(cfg = rec_cfg, filename=rec_file)
 
-            # TODO: check output file exist and is correct size
+            # TODO: check output file exist and is correct size and log result
 
             # plot
             plt.figure()
