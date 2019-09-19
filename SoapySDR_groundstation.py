@@ -13,6 +13,7 @@ import psutil
 import subprocess
 
 from pandas.plotting import register_matplotlib_converters
+
 register_matplotlib_converters()
 
 matplotlib.use("Agg")
@@ -249,103 +250,111 @@ def main():
     logging.basicConfig(level=logging.INFO, format=log_fmt, filename=logfilename)
 
     if config_json:
-        ts = sky.load.timescale()
-        logger.info(str(psutil.disk_usage("/")).replace(", ", ",\n"))
-        du = psutil.disk_usage("/")
-
-        while du[3] < 95:  # run while at least 5% of disk space available
-            config_json = read_config("config.json")
-            logger.info(str(psutil.virtual_memory()).replace(", ", ",\n"))
-            pass_df = next_pass(config_json, verbose=verbose)
-            sys.stderr.write(
-                "next pass is of {0} starting at UTC {1} lasting {2} seconds\n".format(
-                    pass_df.iloc[0]["Satellite"],
-                    pass_df.iloc[0]["UTC_time"],
-                    (
-                        pass_df.iloc[-1]["UTC_time"] - pass_df.iloc[0]["UTC_time"]
-                    ).seconds,
-                )
-            )
-            logger.info(
-                "next pass is of {0} starting at UTC {1} lasting {2} seconds".format(
-                    pass_df.iloc[0]["Satellite"],
-                    pass_df.iloc[0]["UTC_time"],
-                    (
-                        pass_df.iloc[-1]["UTC_time"] - pass_df.iloc[0]["UTC_time"]
-                    ).seconds,
-                )
-            )
-
-
-            # wait until next pass
-            t = ts.now().utc_datetime()
-            # wait until defined time
-            logger.info("waiting until {0} UTC".format(pass_df.iloc[0]["UTC_time"]))
-            st = pass_df.iloc[0]["UTC_time"]
-            while t  < st:
-                t = ts.now().utc_datetime()
-
-            freq = int(pass_df.iloc[0]["f0"])
-            duration = (
-                pass_df.iloc[-1]["UTC_time"] - pass_df.iloc[0]["UTC_time"]
-            ).seconds
-            fs = int(config_json["sample_rate"])
-
-            rec_cfg = {
-                "freq": freq,
-                "gain": 0,
-                "fs": fs,
-                "F": "CS16",
-                "nsamples": duration * fs}
-
-
-            if "dev_driver" in config_json.keys():
-                rec_cfg["dev"] = config_json["dev_driver"]
-
-            if "output_format" not in config_json.keys():
-                config_json["output_format"] = "CS16"
-
-            rec_cfg["dev"] = config_json["output_format"]
-
-            filename = pass_df.iloc[0]["Satellite"].split("[")[0].replace(
-                " ", "_"
-            ) + ts.now().utc_datetime().strftime("%Y%m%d_%H%M%S")
-
-            rec_file = os.path.join(config_json["Recording_dir"], filename + f'_{freq}Hz.{config_json["output_format"]}')
-            fig_file = os.path.join(config_json["Recording_dir"], filename + ".png")
-            csv_file = os.path.join(config_json["Recording_dir"], filename + ".csv")
-
-            # record pass
-            logger.info("starting recording at {0}".format(ts.now().utc_datetime()))
-            logger.info(f'recording {duration * fs} samples at {fs} Hz sample rate. Tunning to {freq} Hz')
-
-            rx_sdr_cmd(cfg = rec_cfg, filename=rec_file)
-
-            # TODO: check output file exist and is correct size and log result
-
-            # plot
-            plt.figure()
-            ax = plt.subplot(122, projection="polar")
-            plt.plot(
-                pass_df["Azimuth_degrees"] * np.pi / 180,
-                90 - pass_df["Altitude_degrees"],
-                "b-",
-            )
-            ax.set_ylim(bottom=0, top=90)
-            ax.set_theta_zero_location("N")
-            ax.set_theta_direction(-1)
-            ax.set_yticklabels([])
-            plt.title(pass_df.iloc[0]["Satellite"])
-            ax = plt.subplot(121)
-            ax.plot_date(pass_df["UTC_time"], pass_df["freq"] * 1e-6, "b-")
-            plt.xticks(rotation="vertical")
-            plt.ylabel("Freq [MHz]")
-            ax.grid()
-            plt.savefig(fig_file)
-            # save last recorded pass data to csv
-            pass_df.to_csv(csv_file)
-            del pass_df
+        if config_json["State"] == "run":
+            ts = sky.load.timescale()
+            logger.info(str(psutil.disk_usage("/")).replace(", ", ",\n"))
             du = psutil.disk_usage("/")
+
+            while du[3] < 95:  # run while at least 5% of disk space available
+                config_json = read_config("config.json")
+                logger.info(str(psutil.virtual_memory()).replace(", ", ",\n"))
+                pass_df = next_pass(config_json, verbose=verbose)
+                sys.stderr.write(
+                    "next pass is of {0} starting at UTC {1} lasting {2} seconds\n".format(
+                        pass_df.iloc[0]["Satellite"],
+                        pass_df.iloc[0]["UTC_time"],
+                        (
+                            pass_df.iloc[-1]["UTC_time"] - pass_df.iloc[0]["UTC_time"]
+                        ).seconds,
+                    )
+                )
+                logger.info(
+                    "next pass is of {0} starting at UTC {1} lasting {2} seconds".format(
+                        pass_df.iloc[0]["Satellite"],
+                        pass_df.iloc[0]["UTC_time"],
+                        (
+                            pass_df.iloc[-1]["UTC_time"] - pass_df.iloc[0]["UTC_time"]
+                        ).seconds,
+                    )
+                )
+
+                # wait until next pass
+                t = ts.now().utc_datetime()
+                # wait until defined time
+                logger.info("waiting until {0} UTC".format(pass_df.iloc[0]["UTC_time"]))
+                st = pass_df.iloc[0]["UTC_time"]
+                while t < st:
+                    t = ts.now().utc_datetime()
+
+                freq = int(pass_df.iloc[0]["f0"])
+                duration = (
+                    pass_df.iloc[-1]["UTC_time"] - pass_df.iloc[0]["UTC_time"]
+                ).seconds
+                fs = int(config_json["sample_rate"])
+
+                rec_cfg = {
+                    "freq": freq,
+                    "gain": 0,
+                    "fs": fs,
+                    "F": "CS16",
+                    "nsamples": duration * fs,
+                }
+
+                if "dev_driver" in config_json.keys():
+                    rec_cfg["dev"] = config_json["dev_driver"]
+
+                if "output_format" not in config_json.keys():
+                    config_json["output_format"] = "CS16"
+
+                rec_cfg["dev"] = config_json["output_format"]
+
+                filename = pass_df.iloc[0]["Satellite"].split("[")[0].replace(
+                    " ", "_"
+                ) + ts.now().utc_datetime().strftime("%Y%m%d_%H%M%S")
+
+                rec_file = os.path.join(
+                    config_json["Recording_dir"],
+                    filename + f'_{freq}Hz.{config_json["output_format"]}',
+                )
+                fig_file = os.path.join(config_json["Recording_dir"], filename + ".png")
+                csv_file = os.path.join(config_json["Recording_dir"], filename + ".csv")
+
+                # TODO: estimate how big the recording file will be and check that there is enough disk space
+                # do not record, if there isn't
+
+                # record pass
+                logger.info("starting recording at {0}".format(ts.now().utc_datetime()))
+                logger.info(
+                    f"recording {duration * fs} samples at {fs} Hz sample rate. Tunning to {freq} Hz"
+                )
+
+                rx_sdr_cmd(cfg=rec_cfg, filename=rec_file)
+
+                # TODO: check output file exist and is correct size and log result
+
+                # plot
+                plt.figure()
+                ax = plt.subplot(122, projection="polar")
+                plt.plot(
+                    pass_df["Azimuth_degrees"] * np.pi / 180,
+                    90 - pass_df["Altitude_degrees"],
+                    "b-",
+                )
+                ax.set_ylim(bottom=0, top=90)
+                ax.set_theta_zero_location("N")
+                ax.set_theta_direction(-1)
+                ax.set_yticklabels([])
+                plt.title(pass_df.iloc[0]["Satellite"])
+                ax = plt.subplot(121)
+                ax.plot_date(pass_df["UTC_time"], pass_df["freq"] * 1e-6, "b-")
+                plt.xticks(rotation="vertical")
+                plt.ylabel("Freq [MHz]")
+                ax.grid()
+                plt.savefig(fig_file)
+                # save last recorded pass data to csv
+                pass_df.to_csv(csv_file)
+                del pass_df
+                du = psutil.disk_usage("/")
 
 
 if __name__ == "__main__":
