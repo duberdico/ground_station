@@ -301,7 +301,7 @@ def main():
                 "F": "CS16",
                 "nsamples": duration * fs}
 
-            if "sample_rate" in config_json.keys():
+            if "dev_driver" in config_json.keys():
                 rec_cfg["dev"] = config_json["dev_driver"]
 
             # record pass
