@@ -303,6 +303,9 @@ def main():
                 if "dev_driver" in config_json.keys():
                     rec_cfg["dev"] = config_json["dev_driver"]
 
+                if "gain" in config_json.keys():
+                    rec_cfg["gain"] = config_json["gain"]
+
                 if "output_format" not in config_json.keys():
                     config_json["output_format"] = "CS16"
 
