@@ -1,6 +1,8 @@
 # ground_station
 Python code to run an automatic satellite ground station using software defined radio.
-Used to predict next pass of one in a list of satellites specified in config.json, wait until time of pass and initiate raw IQ samples recording using a call to rx_sdr for the duration of the pass. Recording parameters (e.g. tunned frequency, gain, etc.) are also specified in the config file. 
+Used to predict next pass of one in a list of satellites specified in config.json, wait until time of pass and initiate raw IQ samples recording using a call to rx_sdr(https://github.com/rxseger/rx_tools) for the duration of the pass. Recording parameters (e.g. tunned frequency, gain, etc.) are also specified in the config file. 
+
+The idea is to have several other processes triggered by the creation of IQ files, that decode the signals (not yet implemented).
 
 Not meant to be a general tool but something that it is useful for my setup. 
 
