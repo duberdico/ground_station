@@ -308,6 +308,15 @@ def main():
                     "t":"biasT_crtl=true"
                 }
 
+                rec_cfg = {
+                    "freq": freq,
+                    "gain": 30,
+                    "fs": fs,
+                    "F": "CS16",
+                    "nsamples": duration * fs,
+                    "d": "rtlsdr",
+                }
+
                 if "dev_driver" in config_json.keys():
                     rec_cfg["dev"] = config_json["dev_driver"]
 
