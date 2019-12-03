@@ -377,6 +377,7 @@ def main():
                 plt.ylabel("Freq [MHz]")
                 ax.grid()
                 plt.savefig(fig_file)
+
                 # save last recorded pass data to csv
                 pass_df.to_csv(csv_file)
                 del pass_df
