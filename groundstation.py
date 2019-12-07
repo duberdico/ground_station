@@ -92,7 +92,7 @@ def rx_sdr_cmd(cfg, filename=None, verbose=False):
 
         cmd.extend((filename,))
         if verbose:
-            print(" ".join(cmd))
+            logger.debug(" ".join(cmd))
         try:
             return_code = subprocess.call(cmd)
         except:
@@ -100,7 +100,7 @@ def rx_sdr_cmd(cfg, filename=None, verbose=False):
 
         return return_code
     else:
-        print("error: config not dict")
+        logger.debug("error: config not dict")
 
 
 def next_pass(config_json, verbose=False):
@@ -126,8 +126,6 @@ def next_pass(config_json, verbose=False):
     cur_df = pd.DataFrame()
     for satellite in satellites:
         if satellite["Name"] in TLEs.keys():
-            if verbose:
-                print("looking for {0} passes".format(satellite["Name"]))
             logger.info("looking for {0} passes".format(satellite["Name"]))
             freq = satellite["Frequency_kHz"] * 1e3
             geocentric = TLEs[satellite["Name"]].at(T)
@@ -214,7 +212,7 @@ def main():
     if "TLE_dir" in config_json.keys():
         logger.info("looking for TLE_dir ({0})".format(config_json["TLE_dir"]))
         if not os.path.isdir(config_json["TLE_dir"]):
-            print(
+            logger.warning(
                 "could not find TLE_dir ({0}). Defaulting to {1} ".format(
                     config_json["TLE_dir"], project_dir
                 )
@@ -235,7 +233,7 @@ def main():
         if os.path.isdir(config_json["log_dir"]):
             logfilename = os.path.join(config_json["log_dir"], "groundstation.log")
         else:
-            print(
+            logger.warning(
                 "couldn't find log_dir ({0}). Defaulting to {1} ".format(
                     config_json["log_dir"], "./log"
                 )
