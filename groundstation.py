@@ -310,7 +310,7 @@ def main():
                     "freq": freq,
                     "gain": 30,
                     "fs": fs,
-                    "F": "CS16",
+                    "F": config_json["output_format"],
                     "nsamples": duration * fs,
                     "d": "rtlsdr",
                 }
@@ -332,7 +332,7 @@ def main():
 
                 rec_file = os.path.join(
                     config_json["Recording_dir"],
-                    filename + f'_{freq}Hz.{config_json["output_format"]}',
+                    filename + f'_fs{rec_cfg["fs"]}_{freq}Hz.{rec_cfg["F"]}',
                 )
                 fig_file = os.path.join(config_json["Recording_dir"], filename + ".png")
                 csv_file = os.path.join(config_json["Recording_dir"], filename + ".csv")
