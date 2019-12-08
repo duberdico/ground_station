@@ -291,6 +291,9 @@ def main():
                     t = ts.now().utc_datetime()
 
                 freq = int(pass_df.iloc[0]["f0"])
+                if "f_offset" in config_json.keys():
+                    freq = freq + int(config_json["f_offset"])
+
                 duration = (
                     pass_df.iloc[-1]["UTC_time"] - pass_df.iloc[0]["UTC_time"]
                 ).seconds
