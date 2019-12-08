@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os
 import sys
 import argparse
@@ -378,7 +379,6 @@ def main():
 
                 # save last recorded pass data to csv
                 pass_df.to_csv(csv_file)
-                del pass_df
                 du = psutil.disk_usage("/")
 
 
