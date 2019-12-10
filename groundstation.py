@@ -196,10 +196,6 @@ def read_config(config_json):
 
 def main():
     logger = logging.getLogger(__name__)
-    logger.info("++++++++++++++++++++++++++++++++++++++++")
-    logger.info("running pandas v" + pd.__version__)
-    logger.info("++++++++++++++++++++++++++++++++++++++++")
-
     project_dir = pathlib.Path(__file__).resolve().parents[0]
     logger.info("running in directory {0}".format(project_dir))
 
@@ -301,23 +297,23 @@ def main():
 
                 rec_cfg = {
                     "freq": freq,
-                    "gain": 0,
+                    "gain": 8,
                     "fs": fs,
                     "F": "CS16",
                     "nsamples": duration * fs,
                     "a":'"Antenna B"',
-                    "d": "sdrplay",
-                    "t":"biasT_crtl=true"
+                    "d": '"driver=SDRplay"',
+                    "t":"biasT_crtl=false"
                 }
 
-                rec_cfg = {
-                    "freq": freq,
-                    "gain": 30,
-                    "fs": fs,
-                    "F": config_json["output_format"],
-                    "nsamples": duration * fs,
-                    "d": "rtlsdr",
-                }
+                #rec_cfg = {
+                #    "freq": freq,
+                #    "gain": 30,
+                #    "fs": fs,
+                #    "F": config_json["output_format"],
+                #    "nsamples": duration * fs,
+                #    "d": "rtlsdr",
+                #}
 
                 if "dev_driver" in config_json.keys():
                     rec_cfg["dev"] = config_json["dev_driver"]
