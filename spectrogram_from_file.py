@@ -52,7 +52,7 @@ def make_spectrogram_from_file(filename, fs, fc, nfft):
             t = lt + t_step * 0.5 + t
             da.append(
                 xr.DataArray(
-                    data=10*np.log10(Sxx),
+                    data=10 * np.log10(Sxx),
                     dims=["Frequency", "Time"],
                     coords={"Frequency": f, "Time": t},
                 )
@@ -68,18 +68,7 @@ def make_spectrogram_from_file(filename, fs, fc, nfft):
     return da
 
 
-if __name__ == "__main__":
-
-    parser = argparse.ArgumentParser(description="Calculate spectrogram")
-    parser.add_argument("-l", "--log_file", metavar="N", type=str, help="logging file")
-    parser.add_argument("-f", "--file", metavar="N", type=str, help="recording file")
-    parser.add_argument("--nfft", metavar="N", type=int, help="nfft", default=2048)
-    parser.add_argument(
-        "-v", "--verbose", help="increase output verbosity", action="store_true"
-    )
-
-    args = parser.parse_args()
-
+def main(args):
     if args.verbose:
         verbose = True
 
@@ -96,4 +85,17 @@ if __name__ == "__main__":
     output_filename = filename.replace(".CS16", ".nc")
     da.to_netcdf(output_filename)
 
-    sys.exit()
+
+if __name__ == "__main__":
+
+    parser = argparse.ArgumentParser(description="Calculate spectrogram")
+    parser.add_argument("-l", "--log_file", metavar="N", type=str, help="logging file")
+    parser.add_argument("-f", "--file", metavar="N", type=str, help="recording file")
+    parser.add_argument("--nfft", metavar="N", type=int, help="nfft", default=2048)
+    parser.add_argument(
+        "-v", "--verbose", help="increase output verbosity", action="store_true"
+    )
+
+    args = parser.parse_args()
+
+    sys.exit(main(args))
