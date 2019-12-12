@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+import sys
 import os
 import scipy.signal as sgn
 import numpy as np
@@ -7,6 +7,7 @@ import xarray as xr
 import argparse
 import logging
 import datetime as dt
+import matplotlib.pyplot as plt
 
 
 def parse_filename(fname):
@@ -28,9 +29,10 @@ def normalize_complex_arr(a):
     return a_oo / np.abs(a_oo).max()
 
 
-def make_spectrogram(filename, fs, fc, nfft):
+def make_spectrogram_from_file(filename, fs, fc, nfft):
 
-    xa = []
+    da = []
+    lt = 0
     with open(filename, "rb") as fid:
         while True:
             data = np.fromfile(
@@ -42,20 +44,24 @@ def make_spectrogram(filename, fs, fc, nfft):
                 break
             cdata = data["i"] + data["q"] * 1j
             cdata = normalize_complex_arr(cdata)
-            Sxx, f, t, im = plt.specgram(cdata, NFFT=nfft, Fs=fs, Fc=fc, noverlap=0)
+            Sxx, f, t, im = plt.specgram(
+                cdata, NFFT=nfft, Fs=fs, Fc=fc, noverlap=0, mode="psd", scale="linear"
+            )
+
             t_step = t[1] - t[0]
+            t = lt + t_step * 0.5 + t
             da.append(
                 xr.DataArray(
-                    data=Sxx,
+                    data=10*np.log10(Sxx),
                     dims=["Frequency", "Time"],
-                    coords={"Frequency": f, "Time": lt + t_step * 0.5 + t},
+                    coords={"Frequency": f, "Time": t},
                 )
             )
-            t_step = t[1] - t[0]
-            lt = t[-1]
+            lt = np.max(t)
 
     da = xr.concat(da, dim="Time")
-    da.attrs = {"nfft": nfft, "fs": fs, "fc": fc}
+    da.name = "spectrogram"
+    da.attrs = {"nfft": nfft, "fs": fs, "fc": fc, "file": filename}
     da["Frequency"].attrs = {"Units": "Hz"}
     da["Time"].attrs = {"Units": "s"}
 
@@ -64,7 +70,7 @@ def make_spectrogram(filename, fs, fc, nfft):
 
 if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser(description="Process some integers.")
+    parser = argparse.ArgumentParser(description="Calculate spectrogram")
     parser.add_argument("-l", "--log_file", metavar="N", type=str, help="logging file")
     parser.add_argument("-f", "--file", metavar="N", type=str, help="recording file")
     parser.add_argument("--nfft", metavar="N", type=int, help="nfft", default=2048)
@@ -85,6 +91,9 @@ if __name__ == "__main__":
     filename = args.file
     nfft = args.nfft
     time, fs, fc = parse_filename(filename)
-    da = make_spectrogram(filename, fs, fc, nfft)
+    da = make_spectrogram_from_file(filename, fs, fc, nfft)
 
-    sys.exit(main())
+    output_filename = filename.replace(".CS16", ".nc")
+    da.to_netcdf(output_filename)
+
+    sys.exit()
