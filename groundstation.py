@@ -269,12 +269,13 @@ def main():
                     )
                 )
                 logger.info(
-                    "next pass is of {0} starting at UTC {1} lasting {2} seconds".format(
+                    "next pass is of {0} starting at UTC {1} lasting {2} seconds. Max elevation is {3} degrees".format(
                         pass_df.iloc[0]["Satellite"],
                         pass_df.iloc[0]["UTC_time"],
                         (
                             pass_df.iloc[-1]["UTC_time"] - pass_df.iloc[0]["UTC_time"]
                         ).seconds,
+                        pass_df["Altitude_degrees"].max(),
                     )
                 )
 
@@ -301,19 +302,19 @@ def main():
                     "fs": fs,
                     "F": "CS16",
                     "nsamples": duration * fs,
-                    "a":'"Antenna B"',
+                    "a": '"Antenna B"',
                     "d": '"driver=SDRplay"',
-                    "t":"biasT_crtl=false"
+                    "t": "biasT_crtl=false",
                 }
 
-                #rec_cfg = {
+                # rec_cfg = {
                 #    "freq": freq,
                 #    "gain": 30,
                 #    "fs": fs,
                 #    "F": config_json["output_format"],
                 #    "nsamples": duration * fs,
                 #    "d": "rtlsdr",
-                #}
+                # }
 
                 if "dev_driver" in config_json.keys():
                     rec_cfg["dev"] = config_json["dev_driver"]
