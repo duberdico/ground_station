@@ -29,7 +29,7 @@ def normalize_complex_arr(a):
     return a_oo / np.abs(a_oo).max()
 
 
-def make_spectrogram_from_file(filename, fs, fc, nfft):
+def make_spectrogram_from_file(filename, fs, fc, nfft, normalize = False):
 
     da = []
     lt = 0
@@ -38,12 +38,13 @@ def make_spectrogram_from_file(filename, fs, fc, nfft):
             data = np.fromfile(
                 fid,
                 dtype=np.dtype([("i", np.int16), ("q", np.int16)]),
-                count=100 * nfft,
+                count=500 * nfft,
             )
             if len(data) == 0:
                 break
             cdata = data["i"] + data["q"] * 1j
-            cdata = normalize_complex_arr(cdata)
+            if normalize:
+                cdata = normalize_complex_arr(cdata)
             Sxx, f, t, im = plt.specgram(
                 cdata, NFFT=nfft, Fs=fs, Fc=fc, noverlap=0, mode="psd", scale="linear"
             )
@@ -60,10 +61,6 @@ def make_spectrogram_from_file(filename, fs, fc, nfft):
             lt = np.max(t)
 
     da = xr.concat(da, dim="Time")
-    da.name = "spectrogram"
-    da.attrs = {"nfft": nfft, "fs": fs, "fc": fc, "file": filename}
-    da["Frequency"].attrs = {"Units": "Hz"}
-    da["Time"].attrs = {"Units": "s"}
 
     return da
 
@@ -79,8 +76,13 @@ def main(args):
 
     filename = args.file
     nfft = args.nfft
+    normalize = args.normalize
     time, fs, fc = parse_filename(filename)
-    da = make_spectrogram_from_file(filename, fs, fc, nfft)
+    da = make_spectrogram_from_file(filename, fs, fc, nfft, normalize)
+    da.name = "spectrogram"
+    da.attrs = {"nfft": nfft, "fs": fs, "fc": fc, "file": filename, "Timestamp": time.strftime("%Y-%m-%dT%H:%M:%S")}
+    da["Frequency"].attrs = {"Units": "Hz"}
+    da["Time"].attrs = {"Units": "s"}
 
     output_filename = filename.replace(".CS16", ".nc")
     da.to_netcdf(output_filename)
@@ -92,6 +94,7 @@ if __name__ == "__main__":
     parser.add_argument("-l", "--log_file", metavar="N", type=str, help="logging file")
     parser.add_argument("-f", "--file", metavar="N", type=str, help="recording file")
     parser.add_argument("--nfft", metavar="N", type=int, help="nfft", default=2048)
+    parser.add_argument("-n", "--normalize", help="normalize", action="store_true", default=False)
     parser.add_argument(
         "-v", "--verbose", help="increase output verbosity", action="store_true"
     )
