@@ -275,7 +275,7 @@ def main():
                         (
                             pass_df.iloc[-1]["UTC_time"] - pass_df.iloc[0]["UTC_time"]
                         ).seconds,
-                        pass_df["Altitude_degrees"].max(),
+                        pass_df["Altitude_degrees"].max().round(1),
                     )
                 )
 
