@@ -139,6 +139,8 @@ def next_pass(config_json, verbose=False):
             k = j[1:] - j[0:-1]
             s = np.argwhere(k == 1).reshape(-1)
             e = np.argwhere(k == -1).reshape(-1)
+            print(s)
+            print(e)
             for si in s:
                 h = e[e > si].reshape(-1).min()
                 if h > 0:
@@ -298,13 +300,13 @@ def main():
 
                 rec_cfg = {
                     "freq": freq,
-                    "gain": 8,
+                    "gain": "IFGR=20",
                     "fs": fs,
                     "F": "CS16",
                     "nsamples": duration * fs,
                     "a": '"Antenna B"',
                     "d": '"driver=SDRplay"',
-                    "t": "biasT_crtl=false",
+                    "t": "biasT_crtl=true.rfnotch_ctrl=false",
                 }
 
                 # rec_cfg = {
