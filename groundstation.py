@@ -127,6 +127,7 @@ def next_pass(config_json, verbose=False):
     cur_df = pd.DataFrame()
     for satellite in satellites:
         if satellite["Name"] in TLEs.keys():
+
             logger.info("looking for {0} passes".format(satellite["Name"]))
             freq = satellite["Frequency_kHz"] * 1e3
             geocentric = TLEs[satellite["Name"]].at(T)
@@ -139,9 +140,8 @@ def next_pass(config_json, verbose=False):
             k = j[1:] - j[0:-1]
             s = np.argwhere(k == 1).reshape(-1)
             e = np.argwhere(k == -1).reshape(-1)
-            print(s)
-            print(e)
             for si in s:
+
                 h = e[e > si].reshape(-1).min()
                 if h > 0:
                     if (
