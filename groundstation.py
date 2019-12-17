@@ -12,7 +12,6 @@ import pathlib
 import matplotlib
 import psutil
 import subprocess
-
 from pandas.plotting import register_matplotlib_converters
 
 register_matplotlib_converters()
@@ -388,6 +387,11 @@ if __name__ == "__main__":
 
     verbose = False
     doppler = True
+
+    if sys.platform == 'linux2':
+    	import ctypes
+    	libc = ctypes.cdll.LoadLibrary('libc.so.6')
+    	libc.prctl(PR_SET_NAME, 'groundstation', 0, 0, 0)
 
     parser = argparse.ArgumentParser(description="Process some integers.")
     parser.add_argument("--log_dir", metavar="N", type=str, help="logging directory")
