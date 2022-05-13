@@ -1,0 +1,6 @@
+
+skyfield.api
+pandas
+numpy
+matplotlib
+psutil
