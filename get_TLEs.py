@@ -6,7 +6,7 @@ import argparse
 import pandas as pd
 
 
-GROUPS = ["stations","weather","noaa","goes","resource","sarsat","dmc","tdrss","argos","planet","spire","satnogs","cubesat","military","gps-ops"]
+GROUPS = ["stations","weather","resource","tdrss","argos","geo","satnogs","gnss","sbass","nnss","musson","science","education","cubesat","military","gps-ops","amateur"]
 
 def get_TLEs_from_API(groups = GROUPS):
     TLEs = []
